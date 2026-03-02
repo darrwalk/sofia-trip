@@ -30,6 +30,8 @@ function initSchema(db: Database.Database) {
       website TEXT,
       phone TEXT,
       note TEXT,
+      category TEXT NOT NULL DEFAULT 'traditional',
+      tripadvisor_url TEXT,
       score_authenticity INTEGER NOT NULL,
       score_experience INTEGER NOT NULL,
       score_food_quality INTEGER NOT NULL,
@@ -48,10 +50,105 @@ function initSchema(db: Database.Database) {
     );
   `);
 
+  // Migration: add new columns if they don't exist (for existing DBs)
+  const cols = db.prepare('PRAGMA table_info(restaurants)').all() as { name: string }[];
+  const colNames = cols.map(c => c.name);
+  if (!colNames.includes('category')) {
+    db.exec("ALTER TABLE restaurants ADD COLUMN category TEXT NOT NULL DEFAULT 'traditional'");
+  }
+  if (!colNames.includes('tripadvisor_url')) {
+    db.exec('ALTER TABLE restaurants ADD COLUMN tripadvisor_url TEXT');
+  }
+
   // Seed if empty
   const count = (db.prepare('SELECT COUNT(*) as c FROM restaurants').get() as { c: number }).c;
   if (count === 0) {
     seedRestaurants(db);
+  } else if (count < 13) {
+    // Add the 3 new dinner+club restaurants and update existing ones
+    addMissingRestaurants(db);
+    updateExistingTripadvisor(db);
+  } else {
+    // Ensure tripadvisor_url is set on existing rows
+    updateExistingTripadvisor(db);
+  }
+}
+
+const TRIPADVISOR_URLS: Record<string, string> = {
+  'Secret by Chef Petrov': 'https://www.tripadvisor.com/Restaurant_Review-g294452-d10249063-Reviews-Secret_Chef_Table-Sofia_Sofia_Region.html',
+  'Pod Lipite': 'https://www.tripadvisor.com/Restaurant_Review-g294452-d941696-Reviews-Pod_Lipite-Sofia_Sofia_Region.html',
+  'Hadjidraganovite Izbi': 'https://www.tripadvisor.com/Search?q=Hadjidraganovite+Izbi+Sofia+Bulgaria',
+  'Manastirska Magernitsa': 'https://www.tripadvisor.com/Search?q=Manastirska+Magernitsa+Sofia+Bulgaria',
+  'Cosmos': 'https://www.tripadvisor.com/Search?q=Cosmos+Restaurant+Sofia+Bulgaria',
+  'Chevermeto': 'https://www.tripadvisor.com/Search?q=Chevermeto+Sofia+Bulgaria',
+  'Izbata Tavern': 'https://www.tripadvisor.com/Search?q=Izbata+Tavern+Sofia+Bulgaria',
+  'MOMA Bulgarian Food & Wine': 'https://www.tripadvisor.com/Search?q=MOMA+Bulgarian+Food+Wine+Sofia',
+  'Raketa Raki': 'https://www.tripadvisor.com/Search?q=Raketa+Raki+Sofia+Bulgaria',
+  'Staria Chinar': 'https://www.tripadvisor.com/Search?q=Staria+Chinar+Sofia+Bulgaria',
+  'Magnito Piano Bar & Sushi': 'https://www.tripadvisor.com/Search?q=Magnito+Piano+Bar+Sushi+Sofia',
+  'Jazu': 'https://www.tripadvisor.com/Search?q=Jazu+Restaurant+Sofia+Bulgaria',
+  'Chalga Club': 'https://www.tripadvisor.com/Search?q=Chalga+Club+Sofia+Bulgaria',
+};
+
+function updateExistingTripadvisor(db: Database.Database) {
+  const update = db.prepare('UPDATE restaurants SET tripadvisor_url = ? WHERE name = ? AND (tripadvisor_url IS NULL OR tripadvisor_url = \'\')');
+  for (const [name, url] of Object.entries(TRIPADVISOR_URLS)) {
+    update.run(url, name);
+  }
+}
+
+function addMissingRestaurants(db: Database.Database) {
+  const existing = (db.prepare('SELECT rank FROM restaurants').all() as { rank: number }[]).map(r => r.rank);
+  const newRestaurants = [
+    {
+      rank: 11,
+      name: 'Magnito Piano Bar & Sushi',
+      address: 'ul. Lege 8, Sofia Center',
+      price_range: '€20–35/person',
+      category: 'dinner_club',
+      tripadvisor_url: 'https://www.tripadvisor.com/Search?q=Magnito+Piano+Bar+Sushi+Sofia',
+      description: "Two-floor venue that starts as a proper restaurant and ends as a full club. Live Bulgarian and international pop bands perform Wednesday–Saturday from 8pm. Sushi and a full food menu until late. Fits 200 people. The vibe shifts from dinner to dancing around midnight — you never have to leave to get the full night.",
+      website: null, phone: null,
+      note: '🎹 Live bands Wed–Sat · Opens 8pm',
+      score_authenticity: 2, score_experience: 5, score_food_quality: 3, score_exclusivity: 3, score_value: 4
+    },
+    {
+      rank: 12,
+      name: 'Jazu',
+      address: 'Sofia (near Hotel Marinela)',
+      price_range: '€25–45/person',
+      category: 'dinner_club',
+      tripadvisor_url: 'https://www.tripadvisor.com/Search?q=Jazu+Restaurant+Sofia+Bulgaria',
+      description: "Upscale Japanese restaurant that regularly features live music and resident DJs, morphing into a sophisticated lounge-club as the evening progresses. Highly recommended by long-term Sofia expats as the best 'dinner that becomes a night out' option. Cocktails, sushi, and Japanese mains. Smart crowd, excellent service.",
+      website: null, phone: null,
+      note: '🎵 Often has live music — check schedule before going',
+      score_authenticity: 2, score_experience: 4, score_food_quality: 5, score_exclusivity: 4, score_value: 3
+    },
+    {
+      rank: 13,
+      name: 'Chalga Club',
+      address: 'Central Sofia',
+      price_range: '€20–30/person',
+      category: 'dinner_club',
+      tripadvisor_url: 'https://www.tripadvisor.com/Search?q=Chalga+Club+Sofia+Bulgaria',
+      description: "'Chalga' is the Balkan pop-folk hybrid — synth beats woven through traditional folk melodies, belly dancers, a crowd in sequins, and music so loud you feel it in your chest. Bulgarians have a complicated love-hate relationship with it, but experiencing it once is unmissable. This is the most quintessentially Sofia night you can have. Dinner + full club show included. Not for the faint-hearted.",
+      website: null, phone: null,
+      note: "🪗 The most Bulgarian night you'll ever have. Controversial. Unmissable.",
+      score_authenticity: 4, score_experience: 5, score_food_quality: 2, score_exclusivity: 1, score_value: 4
+    }
+  ];
+
+  const insert = db.prepare(`
+    INSERT INTO restaurants (rank, name, address, price_range, category, tripadvisor_url, description, website, phone, note,
+      score_authenticity, score_experience, score_food_quality, score_exclusivity, score_value)
+    VALUES (@rank, @name, @address, @price_range, @category, @tripadvisor_url, @description, @website, @phone, @note,
+      @score_authenticity, @score_experience, @score_food_quality, @score_exclusivity, @score_value)
+  `);
+
+  for (const r of newRestaurants) {
+    if (!existing.includes(r.rank)) {
+      insert.run(r);
+    }
   }
 }
 
@@ -59,107 +156,163 @@ function seedRestaurants(db: Database.Database) {
   const restaurants = [
     {
       rank: 1,
-      name: "Secret by Chef Petrov",
-      address: "Makedonia Blvd 12, Sofia",
-      price_range: "€113/person",
-      description: "23-course tasting menu narrated by the chef as a journey through Bulgarian culinary history — from the ancient Thracians to today. One sitting per night, max 12 people, ~4 hours. Chef trained in Spain; co-chef worked at Fat Duck and Waldorf Astoria. Includes 4 wines. Not just a meal — a full theatrical performance.",
-      website: "https://chefpetrov.com/en/",
-      phone: "+359 885 111 541",
-      note: "⚠️ Book immediately — sells out weeks in advance",
+      name: 'Secret by Chef Petrov',
+      address: 'Makedonia Blvd 12, Sofia',
+      price_range: '€113/person',
+      category: 'traditional',
+      tripadvisor_url: 'https://www.tripadvisor.com/Restaurant_Review-g294452-d10249063-Reviews-Secret_Chef_Table-Sofia_Sofia_Region.html',
+      description: '23-course tasting menu narrated by the chef as a journey through Bulgarian culinary history — from the ancient Thracians to today. One sitting per night, max 12 people, ~4 hours. Chef trained in Spain; co-chef worked at Fat Duck and Waldorf Astoria. Includes 4 wines. Not just a meal — a full theatrical performance.',
+      website: 'https://chefpetrov.com/en/',
+      phone: '+359 885 111 541',
+      note: '⚠️ Book immediately — sells out weeks in advance',
       score_authenticity: 5, score_experience: 5, score_food_quality: 5, score_exclusivity: 5, score_value: 3
     },
     {
       rank: 2,
-      name: "Hadjidraganovite Izbi",
-      address: "Hristo Belchev St 18, Sofia",
-      price_range: "€15–25/person",
+      name: 'Hadjidraganovite Izbi',
+      address: 'Hristo Belchev St 18, Sofia',
+      price_range: '€15–25/person',
+      category: 'traditional',
+      tripadvisor_url: 'https://www.tripadvisor.com/Search?q=Hadjidraganovite+Izbi+Sofia+Bulgaria',
       description: "Medieval wine cellar with stone walls, carved wood, and 18th-century Bulgarian artifacts. Live folk music every evening as part of the atmosphere (not a ticketed show — just the vibe). Regional Bulgarian recipes, big wine list from local vineyards, summer garden. One of the most consistently recommended places by locals.",
       website: null, phone: null, note: null,
       score_authenticity: 5, score_experience: 4, score_food_quality: 4, score_exclusivity: 2, score_value: 4
     },
     {
       rank: 3,
-      name: "Chevermeto",
-      address: "Sofia (central)",
-      price_range: "€20–35/person",
+      name: 'Chevermeto',
+      address: 'Sofia (central)',
+      price_range: '€20–35/person',
+      category: 'traditional',
+      tripadvisor_url: 'https://www.tripadvisor.com/Search?q=Chevermeto+Sofia+Bulgaria',
       description: "The folkloric dinner show experience. 'Cheverme' is a whole lamb slow-roasted on a spit — a Bulgarian village wedding tradition. Live folk dancers and musicians in full costume perform while you eat. High-energy, communal, loud. Best place to bring a group for 'we're really in Bulgaria' energy.",
       website: null, phone: null,
-      note: "Best for groups — high fun factor",
+      note: 'Best for groups — high fun factor',
       score_authenticity: 4, score_experience: 5, score_food_quality: 3, score_exclusivity: 2, score_value: 4
     },
     {
       rank: 4,
-      name: "Pod Lipite",
-      address: "Frederick Joliot-Curie St 1, Sofia",
-      price_range: "€15–25/person",
+      name: 'Pod Lipite',
+      address: 'Frederick Joliot-Curie St 1, Sofia',
+      price_range: '€15–25/person',
+      category: 'traditional',
+      tripadvisor_url: 'https://www.tripadvisor.com/Restaurant_Review-g294452-d941696-Reviews-Pod_Lipite-Sofia_Sofia_Region.html',
       description: "The oldest restaurant in Sofia, open since 1926. Named by Bulgarian literary legend Elin Pelin. Designated a Bulgarian Cultural Monument. All food comes from their own farm (cheese, eggs, meat, vegetables). The interior fixtures are literally 90+ years old. Dishes include lamb's head, clay-pot kavarma, legendary chicken soup. Quiet, intellectual, local crowd.",
       website: null, phone: null,
-      note: "Oldest restaurant in Sofia (since 1926) 🏛️",
+      note: 'Oldest restaurant in Sofia (since 1926) 🏛️',
       score_authenticity: 5, score_experience: 4, score_food_quality: 4, score_exclusivity: 4, score_value: 4
     },
     {
       rank: 5,
-      name: "Manastirska Magernitsa",
-      address: "Han Asparuh St 67, Sofia",
-      price_range: "€15–25/person",
-      description: "Every recipe collected from monasteries around Bulgaria — places that preserved medieval cooking during 500 years of Ottoman rule. Guests are welcomed with homemade bread before ordering. Rustic interior with embroidered tablecloths, folk art, carved wood. Specialities: kavarma in clay pots, monastery bean dish, banitsa, stuffed peppers. Enormous portions.",
+      name: 'Manastirska Magernitsa',
+      address: 'Han Asparuh St 67, Sofia',
+      price_range: '€15–25/person',
+      category: 'traditional',
+      tripadvisor_url: 'https://www.tripadvisor.com/Search?q=Manastirska+Magernitsa+Sofia+Bulgaria',
+      description: 'Every recipe collected from monasteries around Bulgaria — places that preserved medieval cooking during 500 years of Ottoman rule. Guests are welcomed with homemade bread before ordering. Rustic interior with embroidered tablecloths, folk art, carved wood. Specialities: kavarma in clay pots, monastery bean dish, banitsa, stuffed peppers. Enormous portions.',
       website: null, phone: null,
-      note: "Best value on the list 🍞",
+      note: 'Best value on the list 🍞',
       score_authenticity: 5, score_experience: 4, score_food_quality: 4, score_exclusivity: 3, score_value: 5
     },
     {
       rank: 6,
-      name: "Izbata Tavern",
-      address: "Central Sofia",
-      price_range: "€15–25/person",
-      description: "18 years ago the founders drove across Bulgaria collecting forgotten regional recipes that were disappearing. They assembled a menu from those finds, and they've been serving it since. Artsy local crowd — actors, painters, musicians. Less touristy than the big mehanas, more of a local cult following. Warm and slightly theatrical atmosphere.",
+      name: 'Izbata Tavern',
+      address: 'Central Sofia',
+      price_range: '€15–25/person',
+      category: 'traditional',
+      tripadvisor_url: 'https://www.tripadvisor.com/Search?q=Izbata+Tavern+Sofia+Bulgaria',
+      description: '18 years ago the founders drove across Bulgaria collecting forgotten regional recipes that were disappearing. They assembled a menu from those finds, and they\'ve been serving it since. Artsy local crowd — actors, painters, musicians. Less touristy than the big mehanas, more of a local cult following. Warm and slightly theatrical atmosphere.',
       website: null, phone: null, note: null,
       score_authenticity: 5, score_experience: 4, score_food_quality: 4, score_exclusivity: 4, score_value: 5
     },
     {
       rank: 7,
-      name: "Cosmos",
-      address: "Lavele St 19, Sofia",
-      price_range: "€30–50/person",
-      description: "Bulgarian cuisine meets molecular gastronomy. Traditional dishes deconstructed and rebuilt beautifully — flaming desserts, cosmic interior design. Tasting menus with exceptional wine pairings. The creative upscale slot: not as exclusive as Chef Petrov but more accessible. Recommended by a 7-year Sofia resident as the best splurge tasting menu in the city.",
+      name: 'Cosmos',
+      address: 'Lavele St 19, Sofia',
+      price_range: '€30–50/person',
+      category: 'traditional',
+      tripadvisor_url: 'https://www.tripadvisor.com/Search?q=Cosmos+Restaurant+Sofia+Bulgaria',
+      description: 'Bulgarian cuisine meets molecular gastronomy. Traditional dishes deconstructed and rebuilt beautifully — flaming desserts, cosmic interior design. Tasting menus with exceptional wine pairings. The creative upscale slot: not as exclusive as Chef Petrov but more accessible. Recommended by a 7-year Sofia resident as the best splurge tasting menu in the city.',
       website: null, phone: null, note: null,
       score_authenticity: 3, score_experience: 4, score_food_quality: 5, score_exclusivity: 3, score_value: 3
     },
     {
       rank: 8,
-      name: "MOMA Bulgarian Food & Wine",
-      address: "Central Sofia",
-      price_range: "€15–25/person",
-      description: "The modern face of Bulgarian cuisine. Each dining hall has a different theme from Bulgarian folk culture. Traditional recipes with a contemporary touch — refined, not deconstructed. Well-regarded for pairing food with region-specific drinks. Slightly more polished than the mehanas. Reservations recommended for dinner.",
+      name: 'MOMA Bulgarian Food & Wine',
+      address: 'Central Sofia',
+      price_range: '€15–25/person',
+      category: 'traditional',
+      tripadvisor_url: 'https://www.tripadvisor.com/Search?q=MOMA+Bulgarian+Food+Wine+Sofia',
+      description: 'The modern face of Bulgarian cuisine. Each dining hall has a different theme from Bulgarian folk culture. Traditional recipes with a contemporary touch — refined, not deconstructed. Well-regarded for pairing food with region-specific drinks. Slightly more polished than the mehanas. Reservations recommended for dinner.',
       website: null, phone: null,
-      note: "Reservations recommended",
+      note: 'Reservations recommended',
       score_authenticity: 4, score_experience: 3, score_food_quality: 4, score_exclusivity: 2, score_value: 4
     },
     {
       rank: 9,
-      name: "Raketa Raki",
-      address: "Central Sofia (near Sputnik bar)",
-      price_range: "€12–20/person",
+      name: 'Raketa Raki',
+      address: 'Central Sofia (near Sputnik bar)',
+      price_range: '€12–20/person',
+      category: 'traditional',
+      tripadvisor_url: 'https://www.tripadvisor.com/Search?q=Raketa+Raki+Sofia+Bulgaria',
       description: "Soviet-era retro communist décor (name means 'Raki Rocket') with 150 types of rakia — Bulgaria's national spirit — treated like a serious wine list. Modern Bulgarian food alongside. Every foreign guest gets taken here by locals. Pair with a drink at the adjoining Sputnik cocktail bar. This is the late-night spot, not the main dinner.",
       website: null, phone: null,
-      note: "Best late-night spot 🚀",
+      note: 'Best late-night spot 🚀',
       score_authenticity: 3, score_experience: 5, score_food_quality: 3, score_exclusivity: 3, score_value: 5
     },
     {
       rank: 10,
-      name: "Staria Chinar",
-      address: "Knyaz Alexander Dondukov Blvd 71, Sofia",
-      price_range: "€15–25/person",
-      description: "In a historic 1922 building in central Sofia. Famous for the smell of freshly roasted game meats wafting into the street. Traditional Bulgarian recipes, cozy 1920s ambiance. Consistently ranked in Sofia's top 15. Strong local following. Good fallback if other places are fully booked.",
+      name: 'Staria Chinar',
+      address: 'Knyaz Alexander Dondukov Blvd 71, Sofia',
+      price_range: '€15–25/person',
+      category: 'traditional',
+      tripadvisor_url: 'https://www.tripadvisor.com/Search?q=Staria+Chinar+Sofia+Bulgaria',
+      description: 'In a historic 1922 building in central Sofia. Famous for the smell of freshly roasted game meats wafting into the street. Traditional Bulgarian recipes, cozy 1920s ambiance. Consistently ranked in Sofia\'s top 15. Strong local following. Good fallback if other places are fully booked.',
       website: null, phone: null, note: null,
       score_authenticity: 4, score_experience: 3, score_food_quality: 4, score_exclusivity: 2, score_value: 4
+    },
+    {
+      rank: 11,
+      name: 'Magnito Piano Bar & Sushi',
+      address: 'ul. Lege 8, Sofia Center',
+      price_range: '€20–35/person',
+      category: 'dinner_club',
+      tripadvisor_url: 'https://www.tripadvisor.com/Search?q=Magnito+Piano+Bar+Sushi+Sofia',
+      description: "Two-floor venue that starts as a proper restaurant and ends as a full club. Live Bulgarian and international pop bands perform Wednesday–Saturday from 8pm. Sushi and a full food menu until late. Fits 200 people. The vibe shifts from dinner to dancing around midnight — you never have to leave to get the full night.",
+      website: null, phone: null,
+      note: '🎹 Live bands Wed–Sat · Opens 8pm',
+      score_authenticity: 2, score_experience: 5, score_food_quality: 3, score_exclusivity: 3, score_value: 4
+    },
+    {
+      rank: 12,
+      name: 'Jazu',
+      address: 'Sofia (near Hotel Marinela)',
+      price_range: '€25–45/person',
+      category: 'dinner_club',
+      tripadvisor_url: 'https://www.tripadvisor.com/Search?q=Jazu+Restaurant+Sofia+Bulgaria',
+      description: "Upscale Japanese restaurant that regularly features live music and resident DJs, morphing into a sophisticated lounge-club as the evening progresses. Highly recommended by long-term Sofia expats as the best 'dinner that becomes a night out' option. Cocktails, sushi, and Japanese mains. Smart crowd, excellent service.",
+      website: null, phone: null,
+      note: '🎵 Often has live music — check schedule before going',
+      score_authenticity: 2, score_experience: 4, score_food_quality: 5, score_exclusivity: 4, score_value: 3
+    },
+    {
+      rank: 13,
+      name: 'Chalga Club',
+      address: 'Central Sofia',
+      price_range: '€20–30/person',
+      category: 'dinner_club',
+      tripadvisor_url: 'https://www.tripadvisor.com/Search?q=Chalga+Club+Sofia+Bulgaria',
+      description: "'Chalga' is the Balkan pop-folk hybrid — synth beats woven through traditional folk melodies, belly dancers, a crowd in sequins, and music so loud you feel it in your chest. Bulgarians have a complicated love-hate relationship with it, but experiencing it once is unmissable. This is the most quintessentially Sofia night you can have. Dinner + full club show included. Not for the faint-hearted.",
+      website: null, phone: null,
+      note: "🪗 The most Bulgarian night you'll ever have. Controversial. Unmissable.",
+      score_authenticity: 4, score_experience: 5, score_food_quality: 2, score_exclusivity: 1, score_value: 4
     }
   ];
 
   const insert = db.prepare(`
-    INSERT INTO restaurants (rank, name, address, price_range, description, website, phone, note,
+    INSERT INTO restaurants (rank, name, address, price_range, category, tripadvisor_url, description, website, phone, note,
       score_authenticity, score_experience, score_food_quality, score_exclusivity, score_value)
-    VALUES (@rank, @name, @address, @price_range, @description, @website, @phone, @note,
+    VALUES (@rank, @name, @address, @price_range, @category, @tripadvisor_url, @description, @website, @phone, @note,
       @score_authenticity, @score_experience, @score_food_quality, @score_exclusivity, @score_value)
   `);
 
@@ -180,6 +333,8 @@ export type Restaurant = {
   website: string | null;
   phone: string | null;
   note: string | null;
+  category: string;
+  tripadvisor_url: string | null;
   score_authenticity: number;
   score_experience: number;
   score_food_quality: number;

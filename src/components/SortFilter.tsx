@@ -8,6 +8,7 @@ type Restaurant = {
   id: number; rank: number; name: string; address: string;
   price_range: string; description: string; website: string | null;
   phone: string | null; note: string | null;
+  category: string; tripadvisor_url: string | null;
   score_authenticity: number; score_experience: number;
   score_food_quality: number; score_exclusivity: number; score_value: number;
   votes: Vote[]; upCount: number; downCount: number;
@@ -15,14 +16,24 @@ type Restaurant = {
 
 type SortKey = 'rank' | 'votes' | 'authenticity' | 'experience';
 type FilterKey = 'all' | 'authentic' | 'shows';
+type CategoryKey = 'all' | 'traditional' | 'dinner_club';
 
 export function SortFilter({ restaurants }: { restaurants: Restaurant[] }) {
   const [sort, setSort] = useState<SortKey>('rank');
   const [filter, setFilter] = useState<FilterKey>('all');
+  const [category, setCategory] = useState<CategoryKey>('all');
+
+  const traditionalCount = restaurants.filter(r => r.category === 'traditional').length;
+  const dinnerClubCount = restaurants.filter(r => r.category === 'dinner_club').length;
 
   const processed = useMemo(() => {
     let items = [...restaurants];
 
+    // Category filter
+    if (category === 'traditional') items = items.filter(r => r.category === 'traditional');
+    if (category === 'dinner_club') items = items.filter(r => r.category === 'dinner_club');
+
+    // Score filter
     if (filter === 'authentic') items = items.filter(r => r.score_authenticity >= 4);
     if (filter === 'shows') items = items.filter(r => r.score_experience >= 4);
 
@@ -35,7 +46,7 @@ export function SortFilter({ restaurants }: { restaurants: Restaurant[] }) {
     });
 
     return items;
-  }, [restaurants, sort, filter]);
+  }, [restaurants, sort, filter, category]);
 
   const sortButtons: { key: SortKey; label: string }[] = [
     { key: 'rank', label: 'By Rank' },
@@ -52,6 +63,47 @@ export function SortFilter({ restaurants }: { restaurants: Restaurant[] }) {
 
   return (
     <div>
+      {/* Category Tabs */}
+      <div className="flex flex-wrap gap-2 mb-5">
+        <button
+          onClick={() => setCategory('all')}
+          className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all border ${
+            category === 'all'
+              ? 'bg-amber-500 text-slate-900 border-amber-500'
+              : 'bg-slate-800 text-slate-300 border-slate-600 hover:border-slate-500'
+          }`}
+        >
+          All ({restaurants.length})
+        </button>
+        <button
+          onClick={() => setCategory('traditional')}
+          className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all border ${
+            category === 'traditional'
+              ? 'bg-amber-500 text-slate-900 border-amber-500'
+              : 'bg-slate-800 text-slate-300 border-slate-600 hover:border-slate-500'
+          }`}
+        >
+          🍽️ Traditional ({traditionalCount})
+        </button>
+        <button
+          onClick={() => setCategory('dinner_club')}
+          className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all border ${
+            category === 'dinner_club'
+              ? 'bg-purple-500 text-white border-purple-500'
+              : 'bg-slate-800 text-slate-300 border-slate-600 hover:border-purple-500/50'
+          }`}
+        >
+          🍸 Dinner + Club ({dinnerClubCount})
+        </button>
+      </div>
+
+      {/* Dinner + Club Banner */}
+      {category === 'dinner_club' && (
+        <div className="mb-5 bg-purple-500/10 border border-purple-500/30 rounded-xl px-4 py-3 text-sm text-purple-200">
+          🌙 These places start as restaurants and end as clubs — no venue change needed.
+        </div>
+      )}
+
       {/* Controls */}
       <div className="flex flex-col gap-3 mb-6">
         <div>

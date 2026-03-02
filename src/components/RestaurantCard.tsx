@@ -19,6 +19,8 @@ type Restaurant = {
   website: string | null;
   phone: string | null;
   note: string | null;
+  category: string;
+  tripadvisor_url: string | null;
   score_authenticity: number;
   score_experience: number;
   score_food_quality: number;
@@ -37,21 +39,33 @@ export function RestaurantCard({ restaurant }: { restaurant: Restaurant }) {
     : restaurant.description.slice(0, 180) + '…';
 
   const isUrgent = restaurant.note?.startsWith('⚠️');
+  const isDinnerClub = restaurant.category === 'dinner_club';
 
   return (
     <div className="bg-slate-800 border border-slate-700 rounded-2xl p-4 flex flex-col gap-3 hover:border-slate-600 transition-colors">
       {/* Header */}
       <div className="flex items-start gap-3">
-        <div className="flex-shrink-0 w-9 h-9 rounded-full bg-amber-500 flex items-center justify-center text-slate-900 font-bold text-sm">
+        <div className={`flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center text-slate-900 font-bold text-sm ${
+          isDinnerClub ? 'bg-purple-400' : 'bg-amber-500'
+        }`}>
           #{restaurant.rank}
         </div>
         <div className="flex-1 min-w-0">
-          <h3 className="font-bold text-white text-base leading-tight">{restaurant.name}</h3>
+          <div className="flex items-center gap-2 flex-wrap">
+            <h3 className="font-bold text-white text-base leading-tight">{restaurant.name}</h3>
+            {isDinnerClub && (
+              <span className="text-xs px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30 font-medium">
+                🍸 Dinner + Club
+              </span>
+            )}
+          </div>
           <p className="text-slate-400 text-xs mt-0.5">
             📍 {restaurant.address}
           </p>
-          <div className="flex items-center gap-2 mt-1">
-            <span className="text-amber-400 text-xs font-semibold">{restaurant.price_range}</span>
+          <div className="flex items-center gap-2 mt-1 flex-wrap">
+            <span className={`text-xs font-semibold ${isDinnerClub ? 'text-purple-300' : 'text-amber-400'}`}>
+              {restaurant.price_range}
+            </span>
             {restaurant.website && (
               <a
                 href={restaurant.website}
@@ -70,6 +84,17 @@ export function RestaurantCard({ restaurant }: { restaurant: Restaurant }) {
                 📞 {restaurant.phone}
               </a>
             )}
+            {restaurant.tripadvisor_url && (
+              <a
+                href={restaurant.tripadvisor_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs font-medium transition-colors hover:opacity-80"
+                style={{ color: '#34E0A1' }}
+              >
+                🦎 TripAdvisor
+              </a>
+            )}
           </div>
         </div>
       </div>
@@ -79,6 +104,8 @@ export function RestaurantCard({ restaurant }: { restaurant: Restaurant }) {
         <div className={`text-xs px-3 py-2 rounded-lg font-medium ${
           isUrgent
             ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+            : isDinnerClub
+            ? 'bg-purple-500/10 text-purple-200 border border-purple-500/20'
             : 'bg-slate-700/60 text-slate-300'
         }`}>
           {restaurant.note}
