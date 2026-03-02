@@ -16,7 +16,7 @@ type Restaurant = {
 
 type SortKey = 'rank' | 'votes' | 'authenticity' | 'experience';
 type FilterKey = 'all' | 'authentic' | 'shows';
-type CategoryKey = 'all' | 'traditional' | 'dinner_club' | 'lunch';
+type CategoryKey = 'all' | 'traditional' | 'dinner_club' | 'lunch' | 'snack' | 'bar';
 
 export function SortFilter({ restaurants }: { restaurants: Restaurant[] }) {
   const [sort, setSort] = useState<SortKey>('rank');
@@ -26,6 +26,8 @@ export function SortFilter({ restaurants }: { restaurants: Restaurant[] }) {
   const traditionalCount = restaurants.filter(r => r.category === 'traditional').length;
   const dinnerClubCount = restaurants.filter(r => r.category === 'dinner_club').length;
   const lunchCount = restaurants.filter(r => r.category === 'lunch').length;
+  const snackCount = restaurants.filter(r => r.category === 'snack').length;
+  const barCount = restaurants.filter(r => r.category === 'bar').length;
 
   const processed = useMemo(() => {
     let items = [...restaurants];
@@ -34,6 +36,8 @@ export function SortFilter({ restaurants }: { restaurants: Restaurant[] }) {
     if (category === 'traditional') items = items.filter(r => r.category === 'traditional');
     if (category === 'dinner_club') items = items.filter(r => r.category === 'dinner_club');
     if (category === 'lunch') items = items.filter(r => r.category === 'lunch');
+    if (category === 'snack') items = items.filter(r => r.category === 'snack');
+    if (category === 'bar') items = items.filter(r => r.category === 'bar');
 
     // Score filter
     if (filter === 'authentic') items = items.filter(r => r.score_authenticity >= 4);
@@ -107,6 +111,26 @@ export function SortFilter({ restaurants }: { restaurants: Restaurant[] }) {
         >
           ☀️ Lunch & Views ({lunchCount})
         </button>
+        <button
+          onClick={() => setCategory('snack')}
+          className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all border ${
+            category === 'snack'
+              ? 'bg-orange-400 text-slate-900 border-orange-400'
+              : 'bg-slate-800 text-slate-300 border-slate-600 hover:border-orange-400/50'
+          }`}
+        >
+          🥙 Quick Bites ({snackCount})
+        </button>
+        <button
+          onClick={() => setCategory('bar')}
+          className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all border ${
+            category === 'bar'
+              ? 'bg-blue-500 text-white border-blue-500'
+              : 'bg-slate-800 text-slate-300 border-slate-600 hover:border-blue-500/50'
+          }`}
+        >
+          🍺 Beer & Bars ({barCount})
+        </button>
       </div>
 
       {/* Dinner + Club Banner */}
@@ -120,6 +144,20 @@ export function SortFilter({ restaurants }: { restaurants: Restaurant[] }) {
       {category === 'lunch' && (
         <div className="mb-5 bg-emerald-500/10 border border-emerald-500/30 rounded-xl px-4 py-3 text-sm text-emerald-200">
           ☀️ Outdoor terraces and rooftops — best enjoyed between noon and 4pm.
+        </div>
+      )}
+
+      {/* Quick Bites Banner */}
+      {category === 'snack' && (
+        <div className="mb-5 bg-orange-400/10 border border-orange-400/30 rounded-xl px-4 py-3 text-sm text-orange-200">
+          🥙 Street food and bakeries — Sofia&apos;s cheapest and most authentic bites.
+        </div>
+      )}
+
+      {/* Beer & Bars Banner */}
+      {category === 'bar' && (
+        <div className="mb-5 bg-blue-500/10 border border-blue-500/30 rounded-xl px-4 py-3 text-sm text-blue-200">
+          🍺 Cool bars and craft beer spots — afternoon drinks to midnight cocktails.
         </div>
       )}
 

@@ -41,14 +41,34 @@ export function RestaurantCard({ restaurant }: { restaurant: Restaurant }) {
   const isUrgent = restaurant.note?.startsWith('⚠️');
   const isDinnerClub = restaurant.category === 'dinner_club';
   const isLunch = restaurant.category === 'lunch';
+  const isSnack = restaurant.category === 'snack';
+  const isBar = restaurant.category === 'bar';
+
+  const rankBg = isDinnerClub
+    ? 'bg-purple-400'
+    : isLunch
+    ? 'bg-emerald-400'
+    : isSnack
+    ? 'bg-orange-400'
+    : isBar
+    ? 'bg-blue-400'
+    : 'bg-amber-500';
+
+  const priceColor = isDinnerClub
+    ? 'text-purple-300'
+    : isLunch
+    ? 'text-emerald-400'
+    : isSnack
+    ? 'text-orange-400'
+    : isBar
+    ? 'text-blue-400'
+    : 'text-amber-400';
 
   return (
     <div className="bg-slate-800 border border-slate-700 rounded-2xl p-4 flex flex-col gap-3 hover:border-slate-600 transition-colors">
       {/* Header */}
       <div className="flex items-start gap-3">
-        <div className={`flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center text-slate-900 font-bold text-sm ${
-          isDinnerClub ? 'bg-purple-400' : isLunch ? 'bg-emerald-400' : 'bg-amber-500'
-        }`}>
+        <div className={`flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center text-slate-900 font-bold text-sm ${rankBg}`}>
           #{restaurant.rank}
         </div>
         <div className="flex-1 min-w-0">
@@ -64,14 +84,22 @@ export function RestaurantCard({ restaurant }: { restaurant: Restaurant }) {
                 ☀️ Lunch & Views
               </span>
             )}
+            {isSnack && (
+              <span className="text-xs px-2 py-0.5 rounded-full bg-orange-400/15 text-orange-400 border border-orange-400/30 font-medium">
+                🥙 Quick Bite
+              </span>
+            )}
+            {isBar && (
+              <span className="text-xs px-2 py-0.5 rounded-full bg-blue-500/15 text-blue-400 border border-blue-500/30 font-medium">
+                🍺 Bar
+              </span>
+            )}
           </div>
           <p className="text-slate-400 text-xs mt-0.5">
             📍 {restaurant.address}
           </p>
           <div className="flex items-center gap-2 mt-1 flex-wrap">
-            <span className={`text-xs font-semibold ${
-              isDinnerClub ? 'text-purple-300' : isLunch ? 'text-emerald-400' : 'text-amber-400'
-            }`}>
+            <span className={`text-xs font-semibold ${priceColor}`}>
               {restaurant.price_range}
             </span>
             {restaurant.website && (
@@ -116,6 +144,10 @@ export function RestaurantCard({ restaurant }: { restaurant: Restaurant }) {
             ? 'bg-purple-500/10 text-purple-200 border border-purple-500/20'
             : isLunch
             ? 'bg-emerald-500/10 text-emerald-200 border border-emerald-500/20'
+            : isSnack
+            ? 'bg-orange-400/10 text-orange-200 border border-orange-400/20'
+            : isBar
+            ? 'bg-blue-500/10 text-blue-200 border border-blue-500/20'
             : 'bg-slate-700/60 text-slate-300'
         }`}>
           {restaurant.note}

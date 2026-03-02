@@ -63,7 +63,7 @@ function initSchema(db: Database.Database) {
   const count = (db.prepare('SELECT COUNT(*) as c FROM restaurants').get() as { c: number }).c;
   if (count === 0) {
     seedRestaurants(db);
-  } else if (count < 18) {
+  } else if (count < 25) {
     // Add missing restaurants (dinner+club and lunch)
     addMissingRestaurants(db);
     updateExistingTripadvisor(db);
@@ -199,6 +199,92 @@ function addMissingRestaurants(db: Database.Database) {
       website: null, phone: null,
       note: '🌆 360° city + mountain view · Great for a lazy afternoon',
       score_authenticity: 2, score_experience: 4, score_food_quality: 3, score_exclusivity: 3, score_value: 3
+    }
+
+    ,
+    {
+      rank: 19,
+      name: 'Central Market Hall (Halite)',
+      address: 'Maria Luiza Blvd 25, Sofia Center',
+      price_range: '€1–5/item',
+      category: 'snack',
+      tripadvisor_url: 'https://www.tripadvisor.com/Search?q=Central+Market+Hall+Halite+Sofia+Bulgaria',
+      description: "Sofia's stunning 1909 covered market — a neoclassical iron-and-glass hall that's the single best place to graze through Bulgarian street food. Inside: banitsa vendors pulling fresh pastries every 20 minutes, kebapche stalls with lyutenitsa spread, Bulgarian cheese by the slice, meze, ayran, and preserved goods. The building itself is worth the visit. Go hungry, snack your way through, leave with cheese.",
+      website: null, phone: null,
+      note: '🏛️ Built 1909 · The best single stop for all Bulgarian snacks',
+      score_authenticity: 5, score_experience: 4, score_food_quality: 4, score_exclusivity: 2, score_value: 5
+    },
+    {
+      rank: 20,
+      name: 'Sofiyska Banitsa',
+      address: 'Multiple locations · nearest: Vitosha Blvd / Slaveykov Square',
+      price_range: '€0.50–1.50/piece',
+      category: 'snack',
+      tripadvisor_url: 'https://www.tripadvisor.com/Search?q=Sofiyska+Banitsa+Sofia+Bulgaria',
+      description: "Banitsa is Bulgaria's answer to breakfast, hangover cure, and mid-afternoon crisis — all in one flakey, cheese-filled pastry. Sofiyska Banitsa is the beloved local chain that does it best: crispy filo layered with eggs and sirene cheese, pulled hot from the oven every few minutes. Order the classic sirene (cheese), ask for a cup of boza (fermented malt drink, acquired taste) or ayran to wash it down. €0.80 and you're set for two hours.",
+      website: null, phone: null,
+      note: "🥐 Bulgaria's national snack · Get it fresh, eat it standing up",
+      score_authenticity: 5, score_experience: 3, score_food_quality: 4, score_exclusivity: 1, score_value: 5
+    },
+    {
+      rank: 21,
+      name: 'Kebapche on Vitosha Blvd',
+      address: 'Vitosha Boulevard (pedestrian zone), Sofia Center',
+      price_range: '€1–3/portion',
+      category: 'snack',
+      tripadvisor_url: 'https://www.tripadvisor.com/Search?q=Kebapche+Vitosha+Boulevard+Sofia',
+      description: "Walk the length of Vitosha, Sofia's main pedestrian boulevard, and you'll smell it before you see it — charcoal-grilled kebapche (spiced minced-meat sausages) at a dozen street stalls. Order a portion: three kebapche, a lump of lyutenitsa (roasted pepper-tomato spread), and a hunk of bread. Eat standing at the counter. Cost: about €2. This is 'the taste of Bulgaria' as every local will tell you. Pair with a cold Zagorka from the stand next door.",
+      website: null, phone: null,
+      note: '🔥 Eat standing · Pair with cold Zagorka beer · €2 total',
+      score_authenticity: 5, score_experience: 3, score_food_quality: 4, score_exclusivity: 1, score_value: 5
+    },
+    {
+      rank: 22,
+      name: 'Hambara',
+      address: 'ul. 6-ti Septemvri 22 (hidden backyard)',
+      price_range: '€3–8/drink',
+      category: 'bar',
+      tripadvisor_url: 'https://www.tripadvisor.com/Search?q=Hambara+Bar+Sofia+Bulgaria',
+      description: "The most atmospheric bar in Sofia — and possibly in the Balkans. No sign. No electricity. Lit only by hundreds of candles. During Communist times this was the secret gathering place of Sofia's intellectual elite — philosophers, artists, and writers who came to speak freely. Today you still knock on the door (no app, no list — just knock and wait). Inside: two candlelit levels, medieval-barn-meets-hipster vibe, live music, creative shots. Finding it is half the experience.",
+      website: null, phone: null,
+      note: "🕯️ No sign, no electricity · Knock on the unmarked door · Don't miss",
+      score_authenticity: 5, score_experience: 5, score_food_quality: 2, score_exclusivity: 5, score_value: 4
+    },
+    {
+      rank: 23,
+      name: '5L Speakeasy Bar',
+      address: 'ul. Tsar Shishman 15, Sofia Center',
+      price_range: '€4–9/drink',
+      category: 'bar',
+      tripadvisor_url: 'https://www.tripadvisor.com/Search?q=5L+Speakeasy+Bar+Sofia+Bulgaria',
+      description: "Enter if you can. The door is locked — a ring of keys hangs nearby and you need to figure out which one opens it (no spoilers). Inside: prohibition-era décor, dark wood, mood lighting, two levels. The cocktail menu is exceptional — some of Sofia's best mixologists work here. Summer brings a rooftop terrace. Located on Tsar Shishman street, which is basically Sofia's best bar-hopping strip. Go early (from 4pm) to get a table.",
+      website: null, phone: null,
+      note: '🗝️ Solve the key puzzle to enter · Best cocktails in Sofia',
+      score_authenticity: 3, score_experience: 5, score_food_quality: 2, score_exclusivity: 4, score_value: 3
+    },
+    {
+      rank: 24,
+      name: 'KANAAL Craft Beer Bar',
+      address: 'ul. Tsar Shishman 12 area, Sofia Center',
+      price_range: '€2–5/beer',
+      category: 'bar',
+      tripadvisor_url: 'https://www.tripadvisor.com/Search?q=KANAAL+craft+beer+Sofia+Bulgaria',
+      description: "Sofia's original craft beer bar, open since 2011 — way before craft beer was cool in Bulgaria. 20+ taps rotating local and international craft brews, knowledgeable staff who actually love beer, unpretentious atmosphere. This is where Sofia's craft beer community was born. Outdoor terrace in summer. If you want to have a proper afternoon beer session and explore Bulgarian craft brewing, this is the place.",
+      website: null, phone: null,
+      note: "🍻 Sofia's original craft beer spot since 2011 · 20+ taps",
+      score_authenticity: 4, score_experience: 4, score_food_quality: 3, score_exclusivity: 3, score_value: 5
+    },
+    {
+      rank: 25,
+      name: 'One More Bar',
+      address: 'ul. Tsar Shishman 12, Sofia Center',
+      price_range: '€2–7/drink',
+      category: 'bar',
+      tripadvisor_url: 'https://www.tripadvisor.com/Search?q=One+More+Bar+Sofia+Bulgaria',
+      description: "Named after what you'll keep saying all night. A former kindergarten turned beloved neighbourhood bar — street terrace in summer, warm interior in winter, great cocktails and an extensive beer and wine list. Located on Tsar Shishman, the best nightlife street in Sofia, right next to 5L Speakeasy. Start here from 8:30pm with a cocktail, then puzzle your way into 5L next door. The definition of a good first stop.",
+      website: null, phone: null,
+      note: '🏫 Former kindergarten · Perfect first stop on Tsar Shishman strip',
+      score_authenticity: 3, score_experience: 4, score_food_quality: 3, score_exclusivity: 3, score_value: 4
     }
   ];
 
@@ -430,6 +516,92 @@ function seedRestaurants(db: Database.Database) {
       website: null, phone: null,
       note: '🌆 360° city + mountain view · Great for a lazy afternoon',
       score_authenticity: 2, score_experience: 4, score_food_quality: 3, score_exclusivity: 3, score_value: 3
+    }
+
+    ,
+    {
+      rank: 19,
+      name: 'Central Market Hall (Halite)',
+      address: 'Maria Luiza Blvd 25, Sofia Center',
+      price_range: '€1–5/item',
+      category: 'snack',
+      tripadvisor_url: 'https://www.tripadvisor.com/Search?q=Central+Market+Hall+Halite+Sofia+Bulgaria',
+      description: "Sofia's stunning 1909 covered market — a neoclassical iron-and-glass hall that's the single best place to graze through Bulgarian street food. Inside: banitsa vendors pulling fresh pastries every 20 minutes, kebapche stalls with lyutenitsa spread, Bulgarian cheese by the slice, meze, ayran, and preserved goods. The building itself is worth the visit. Go hungry, snack your way through, leave with cheese.",
+      website: null, phone: null,
+      note: '🏛️ Built 1909 · The best single stop for all Bulgarian snacks',
+      score_authenticity: 5, score_experience: 4, score_food_quality: 4, score_exclusivity: 2, score_value: 5
+    },
+    {
+      rank: 20,
+      name: 'Sofiyska Banitsa',
+      address: 'Multiple locations · nearest: Vitosha Blvd / Slaveykov Square',
+      price_range: '€0.50–1.50/piece',
+      category: 'snack',
+      tripadvisor_url: 'https://www.tripadvisor.com/Search?q=Sofiyska+Banitsa+Sofia+Bulgaria',
+      description: "Banitsa is Bulgaria's answer to breakfast, hangover cure, and mid-afternoon crisis — all in one flakey, cheese-filled pastry. Sofiyska Banitsa is the beloved local chain that does it best: crispy filo layered with eggs and sirene cheese, pulled hot from the oven every few minutes. Order the classic sirene (cheese), ask for a cup of boza (fermented malt drink, acquired taste) or ayran to wash it down. €0.80 and you're set for two hours.",
+      website: null, phone: null,
+      note: "🥐 Bulgaria's national snack · Get it fresh, eat it standing up",
+      score_authenticity: 5, score_experience: 3, score_food_quality: 4, score_exclusivity: 1, score_value: 5
+    },
+    {
+      rank: 21,
+      name: 'Kebapche on Vitosha Blvd',
+      address: 'Vitosha Boulevard (pedestrian zone), Sofia Center',
+      price_range: '€1–3/portion',
+      category: 'snack',
+      tripadvisor_url: 'https://www.tripadvisor.com/Search?q=Kebapche+Vitosha+Boulevard+Sofia',
+      description: "Walk the length of Vitosha, Sofia's main pedestrian boulevard, and you'll smell it before you see it — charcoal-grilled kebapche (spiced minced-meat sausages) at a dozen street stalls. Order a portion: three kebapche, a lump of lyutenitsa (roasted pepper-tomato spread), and a hunk of bread. Eat standing at the counter. Cost: about €2. This is 'the taste of Bulgaria' as every local will tell you. Pair with a cold Zagorka from the stand next door.",
+      website: null, phone: null,
+      note: '🔥 Eat standing · Pair with cold Zagorka beer · €2 total',
+      score_authenticity: 5, score_experience: 3, score_food_quality: 4, score_exclusivity: 1, score_value: 5
+    },
+    {
+      rank: 22,
+      name: 'Hambara',
+      address: 'ul. 6-ti Septemvri 22 (hidden backyard)',
+      price_range: '€3–8/drink',
+      category: 'bar',
+      tripadvisor_url: 'https://www.tripadvisor.com/Search?q=Hambara+Bar+Sofia+Bulgaria',
+      description: "The most atmospheric bar in Sofia — and possibly in the Balkans. No sign. No electricity. Lit only by hundreds of candles. During Communist times this was the secret gathering place of Sofia's intellectual elite — philosophers, artists, and writers who came to speak freely. Today you still knock on the door (no app, no list — just knock and wait). Inside: two candlelit levels, medieval-barn-meets-hipster vibe, live music, creative shots. Finding it is half the experience.",
+      website: null, phone: null,
+      note: "🕯️ No sign, no electricity · Knock on the unmarked door · Don't miss",
+      score_authenticity: 5, score_experience: 5, score_food_quality: 2, score_exclusivity: 5, score_value: 4
+    },
+    {
+      rank: 23,
+      name: '5L Speakeasy Bar',
+      address: 'ul. Tsar Shishman 15, Sofia Center',
+      price_range: '€4–9/drink',
+      category: 'bar',
+      tripadvisor_url: 'https://www.tripadvisor.com/Search?q=5L+Speakeasy+Bar+Sofia+Bulgaria',
+      description: "Enter if you can. The door is locked — a ring of keys hangs nearby and you need to figure out which one opens it (no spoilers). Inside: prohibition-era décor, dark wood, mood lighting, two levels. The cocktail menu is exceptional — some of Sofia's best mixologists work here. Summer brings a rooftop terrace. Located on Tsar Shishman street, which is basically Sofia's best bar-hopping strip. Go early (from 4pm) to get a table.",
+      website: null, phone: null,
+      note: '🗝️ Solve the key puzzle to enter · Best cocktails in Sofia',
+      score_authenticity: 3, score_experience: 5, score_food_quality: 2, score_exclusivity: 4, score_value: 3
+    },
+    {
+      rank: 24,
+      name: 'KANAAL Craft Beer Bar',
+      address: 'ul. Tsar Shishman 12 area, Sofia Center',
+      price_range: '€2–5/beer',
+      category: 'bar',
+      tripadvisor_url: 'https://www.tripadvisor.com/Search?q=KANAAL+craft+beer+Sofia+Bulgaria',
+      description: "Sofia's original craft beer bar, open since 2011 — way before craft beer was cool in Bulgaria. 20+ taps rotating local and international craft brews, knowledgeable staff who actually love beer, unpretentious atmosphere. This is where Sofia's craft beer community was born. Outdoor terrace in summer. If you want to have a proper afternoon beer session and explore Bulgarian craft brewing, this is the place.",
+      website: null, phone: null,
+      note: "🍻 Sofia's original craft beer spot since 2011 · 20+ taps",
+      score_authenticity: 4, score_experience: 4, score_food_quality: 3, score_exclusivity: 3, score_value: 5
+    },
+    {
+      rank: 25,
+      name: 'One More Bar',
+      address: 'ul. Tsar Shishman 12, Sofia Center',
+      price_range: '€2–7/drink',
+      category: 'bar',
+      tripadvisor_url: 'https://www.tripadvisor.com/Search?q=One+More+Bar+Sofia+Bulgaria',
+      description: "Named after what you'll keep saying all night. A former kindergarten turned beloved neighbourhood bar — street terrace in summer, warm interior in winter, great cocktails and an extensive beer and wine list. Located on Tsar Shishman, the best nightlife street in Sofia, right next to 5L Speakeasy. Start here from 8:30pm with a cocktail, then puzzle your way into 5L next door. The definition of a good first stop.",
+      website: null, phone: null,
+      note: '🏫 Former kindergarten · Perfect first stop on Tsar Shishman strip',
+      score_authenticity: 3, score_experience: 4, score_food_quality: 3, score_exclusivity: 3, score_value: 4
     }
   ];
 
