@@ -21,6 +21,7 @@ type Restaurant = {
   note: string | null;
   category: string;
   tripadvisor_url: string | null;
+  google_maps_url: string | null;
   score_authenticity: number;
   score_experience: number;
   score_food_quality: number;
@@ -129,6 +130,22 @@ export function RestaurantCard({ restaurant }: { restaurant: Restaurant }) {
                 style={{ color: '#34E0A1' }}
               >
                 🦎 TripAdvisor
+              </a>
+            )}
+            {restaurant.google_maps_url && (
+              <a
+                href={restaurant.google_maps_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs font-medium inline-flex items-center gap-1 text-slate-300 hover:text-white transition-colors"
+              >
+                📍 Maps
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3 h-3 opacity-70">
+                  <path d="M14 3h7v7" />
+                  <path d="M10 14L21 3" />
+                  <path d="M21 14v7h-7" />
+                  <path d="M3 10v11h11" />
+                </svg>
               </a>
             )}
           </div>

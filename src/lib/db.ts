@@ -31,6 +31,7 @@ function initSchema(db: Database.Database) {
       note TEXT,
       category TEXT NOT NULL DEFAULT 'traditional',
       tripadvisor_url TEXT,
+      google_maps_url TEXT,
       score_authenticity INTEGER NOT NULL,
       score_experience INTEGER NOT NULL,
       score_food_quality INTEGER NOT NULL,
@@ -58,6 +59,9 @@ function initSchema(db: Database.Database) {
   if (!colNames.includes('tripadvisor_url')) {
     db.exec('ALTER TABLE restaurants ADD COLUMN tripadvisor_url TEXT');
   }
+  if (!colNames.includes('google_maps_url')) {
+    db.exec('ALTER TABLE restaurants ADD COLUMN google_maps_url TEXT');
+  }
 
   // Seed if empty
   const count = (db.prepare('SELECT COUNT(*) as c FROM restaurants').get() as { c: number }).c;
@@ -67,10 +71,16 @@ function initSchema(db: Database.Database) {
     // Add missing restaurants (dinner+club and lunch)
     addMissingRestaurants(db);
     updateExistingTripadvisor(db);
+    updateExistingGoogleMapsUrls(db);
   } else {
     // Ensure tripadvisor_url is set on existing rows
     updateExistingTripadvisor(db);
+    updateExistingGoogleMapsUrls(db);
   }
+}
+
+function buildGoogleMapsUrl(name: string, address: string) {
+  return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(name + ' ' + address);
 }
 
 const TRIPADVISOR_URLS: Record<string, string> = {
@@ -98,6 +108,14 @@ function updateExistingTripadvisor(db: Database.Database) {
   const update = db.prepare('UPDATE restaurants SET tripadvisor_url = ? WHERE name = ? AND (tripadvisor_url IS NULL OR tripadvisor_url = \'\')');
   for (const [name, url] of Object.entries(TRIPADVISOR_URLS)) {
     update.run(url, name);
+  }
+}
+
+function updateExistingGoogleMapsUrls(db: Database.Database) {
+  const select = db.prepare("SELECT id, name, address FROM restaurants WHERE google_maps_url IS NULL OR google_maps_url = ''");
+  const update = db.prepare("UPDATE restaurants SET google_maps_url = ? WHERE id = ?");
+  for (const r of select.all() as { id: number; name: string; address: string }[]) {
+    update.run(buildGoogleMapsUrl(r.name, r.address), r.id);
   }
 }
 
@@ -289,15 +307,15 @@ function addMissingRestaurants(db: Database.Database) {
   ];
 
   const insert = db.prepare(`
-    INSERT INTO restaurants (rank, name, address, price_range, category, tripadvisor_url, description, website, phone, note,
+    INSERT INTO restaurants (rank, name, address, price_range, category, tripadvisor_url, google_maps_url, description, website, phone, note,
       score_authenticity, score_experience, score_food_quality, score_exclusivity, score_value)
-    VALUES (@rank, @name, @address, @price_range, @category, @tripadvisor_url, @description, @website, @phone, @note,
+    VALUES (@rank, @name, @address, @price_range, @category, , , , @website, @phone, @note,
       @score_authenticity, @score_experience, @score_food_quality, @score_exclusivity, @score_value)
   `);
 
   for (const r of newRestaurants) {
     if (!existing.includes(r.rank)) {
-      insert.run(r);
+      insert.run({ ...r, google_maps_url: buildGoogleMapsUrl(r.name, r.address) });
     }
   }
 }
@@ -606,14 +624,14 @@ function seedRestaurants(db: Database.Database) {
   ];
 
   const insert = db.prepare(`
-    INSERT INTO restaurants (rank, name, address, price_range, category, tripadvisor_url, description, website, phone, note,
+    INSERT INTO restaurants (rank, name, address, price_range, category, tripadvisor_url, google_maps_url, description, website, phone, note,
       score_authenticity, score_experience, score_food_quality, score_exclusivity, score_value)
-    VALUES (@rank, @name, @address, @price_range, @category, @tripadvisor_url, @description, @website, @phone, @note,
+    VALUES (@rank, @name, @address, @price_range, @category, , , , @website, @phone, @note,
       @score_authenticity, @score_experience, @score_food_quality, @score_exclusivity, @score_value)
   `);
 
   const insertMany = db.transaction((items: typeof restaurants) => {
-    for (const item of items) insert.run(item);
+    for (const item of items) insert.run({ ...item, google_maps_url: buildGoogleMapsUrl(item.name, item.address) });
   });
 
   insertMany(restaurants);
@@ -631,6 +649,7 @@ export type Restaurant = {
   note: string | null;
   category: string;
   tripadvisor_url: string | null;
+  google_maps_url: string | null;
   score_authenticity: number;
   score_experience: number;
   score_food_quality: number;

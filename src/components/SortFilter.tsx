@@ -9,6 +9,7 @@ type Restaurant = {
   price_range: string; description: string; website: string | null;
   phone: string | null; note: string | null;
   category: string; tripadvisor_url: string | null;
+  google_maps_url: string | null;
   score_authenticity: number; score_experience: number;
   score_food_quality: number; score_exclusivity: number; score_value: number;
   votes: Vote[]; upCount: number; downCount: number;
