@@ -1,17 +1,16 @@
 import Database from 'better-sqlite3';
 import path from 'path';
-import fs from 'fs';
+import { mkdirSync } from 'fs';
 
-const DB_DIR = process.env.DB_DIR || '/tmp/sofia-trip-data';
-if (!fs.existsSync(DB_DIR)) {
-  fs.mkdirSync(DB_DIR, { recursive: true });
-}
-const DB_PATH = path.join(DB_DIR, 'sofia-trip.db');
+const DB_DIR = process.env.DB_DIR || '/app/data';
+const DB_PATH = process.env.DB_PATH || path.join(DB_DIR, 'sofia-trip.db');
 
 let _db: Database.Database | null = null;
 
 export function getDb(): Database.Database {
   if (_db) return _db;
+  // Ensure data directory exists (runs at runtime only, not build time)
+  mkdirSync(path.dirname(DB_PATH), { recursive: true });
   _db = new Database(DB_PATH);
   _db.pragma('journal_mode = WAL');
   initSchema(_db);

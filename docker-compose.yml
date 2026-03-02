@@ -1,0 +1,14 @@
+services:
+  sofia-trip:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - sofia-trip-data:/app/data
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+
+volumes:
+  sofia-trip-data:
+    name: sofia-trip-data
