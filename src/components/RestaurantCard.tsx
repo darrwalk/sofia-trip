@@ -40,13 +40,14 @@ export function RestaurantCard({ restaurant }: { restaurant: Restaurant }) {
 
   const isUrgent = restaurant.note?.startsWith('⚠️');
   const isDinnerClub = restaurant.category === 'dinner_club';
+  const isLunch = restaurant.category === 'lunch';
 
   return (
     <div className="bg-slate-800 border border-slate-700 rounded-2xl p-4 flex flex-col gap-3 hover:border-slate-600 transition-colors">
       {/* Header */}
       <div className="flex items-start gap-3">
         <div className={`flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center text-slate-900 font-bold text-sm ${
-          isDinnerClub ? 'bg-purple-400' : 'bg-amber-500'
+          isDinnerClub ? 'bg-purple-400' : isLunch ? 'bg-emerald-400' : 'bg-amber-500'
         }`}>
           #{restaurant.rank}
         </div>
@@ -58,12 +59,19 @@ export function RestaurantCard({ restaurant }: { restaurant: Restaurant }) {
                 🍸 Dinner + Club
               </span>
             )}
+            {isLunch && (
+              <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-medium">
+                ☀️ Lunch & Views
+              </span>
+            )}
           </div>
           <p className="text-slate-400 text-xs mt-0.5">
             📍 {restaurant.address}
           </p>
           <div className="flex items-center gap-2 mt-1 flex-wrap">
-            <span className={`text-xs font-semibold ${isDinnerClub ? 'text-purple-300' : 'text-amber-400'}`}>
+            <span className={`text-xs font-semibold ${
+              isDinnerClub ? 'text-purple-300' : isLunch ? 'text-emerald-400' : 'text-amber-400'
+            }`}>
               {restaurant.price_range}
             </span>
             {restaurant.website && (
@@ -106,6 +114,8 @@ export function RestaurantCard({ restaurant }: { restaurant: Restaurant }) {
             ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
             : isDinnerClub
             ? 'bg-purple-500/10 text-purple-200 border border-purple-500/20'
+            : isLunch
+            ? 'bg-emerald-500/10 text-emerald-200 border border-emerald-500/20'
             : 'bg-slate-700/60 text-slate-300'
         }`}>
           {restaurant.note}

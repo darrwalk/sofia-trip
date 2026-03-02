@@ -64,8 +64,8 @@ function initSchema(db: Database.Database) {
   const count = (db.prepare('SELECT COUNT(*) as c FROM restaurants').get() as { c: number }).c;
   if (count === 0) {
     seedRestaurants(db);
-  } else if (count < 13) {
-    // Add the 3 new dinner+club restaurants and update existing ones
+  } else if (count < 18) {
+    // Add missing restaurants (dinner+club and lunch)
     addMissingRestaurants(db);
     updateExistingTripadvisor(db);
   } else {
@@ -88,6 +88,11 @@ const TRIPADVISOR_URLS: Record<string, string> = {
   'Magnito Piano Bar & Sushi': 'https://www.tripadvisor.com/Search?q=Magnito+Piano+Bar+Sushi+Sofia',
   'Jazu': 'https://www.tripadvisor.com/Search?q=Jazu+Restaurant+Sofia+Bulgaria',
   'Chalga Club': 'https://www.tripadvisor.com/Search?q=Chalga+Club+Sofia+Bulgaria',
+  'Sense Rooftop Bar & Restaurant': 'https://www.tripadvisor.com/Search?q=Sense+Rooftop+Bar+Sofia+Bulgaria',
+  'La Terrazza di Serdica': 'https://www.tripadvisor.com/Search?q=La+Terrazza+di+Serdica+Sofia+Bulgaria',
+  'BojanaVitosha Restaurant': 'https://www.tripadvisor.com/Search?q=BojanaVitosha+Restaurant+Sofia+Bulgaria',
+  'National Theatre Restaurant': 'https://www.tripadvisor.com/Search?q=National+Theatre+Restaurant+Sofia+Bulgaria',
+  'The Corner Bar & Dinner': 'https://www.tripadvisor.com/Search?q=The+Corner+Bar+Dinner+Sofia+Lozenets',
 };
 
 function updateExistingTripadvisor(db: Database.Database) {
@@ -135,6 +140,66 @@ function addMissingRestaurants(db: Database.Database) {
       website: null, phone: null,
       note: "🪗 The most Bulgarian night you'll ever have. Controversial. Unmissable.",
       score_authenticity: 4, score_experience: 5, score_food_quality: 2, score_exclusivity: 1, score_value: 4
+    },
+    {
+      rank: 14,
+      name: 'Sense Rooftop Bar & Restaurant',
+      address: '16 Tsar Osvoboditel Blvd, Sense Hotel Sofia',
+      price_range: '€18–35/person',
+      category: 'lunch',
+      tripadvisor_url: 'https://www.tripadvisor.com/Search?q=Sense+Rooftop+Bar+Sofia+Bulgaria',
+      description: 'The most iconic outdoor spot in Sofia — a rooftop terrace with a direct panoramic view of the Alexander Nevsky Cathedral, one of the largest Orthodox cathedrals in the world. Elegant modern setting, cocktails and food that match the setting. Smart casual dress code. Book ahead on weekends — locals and tourists both know this one.',
+      website: null, phone: null,
+      note: '👗 Smart casual required · Book ahead on weekends',
+      score_authenticity: 2, score_experience: 5, score_food_quality: 4, score_exclusivity: 4, score_value: 3
+    },
+    {
+      rank: 15,
+      name: 'La Terrazza di Serdica',
+      address: '2 Budapeshta St, Arena di Serdica Hotel',
+      price_range: '€15–28/person',
+      category: 'lunch',
+      tripadvisor_url: 'https://www.tripadvisor.com/Search?q=La+Terrazza+di+Serdica+Sofia+Bulgaria',
+      description: "Panoramic rooftop restaurant in the heart of Sofia with sweeping views over the city's most beautiful old rooftops and Vitosha Mountain in the background. Italian-influenced menu in a setting that feels like Rome-meets-Sofia. One of the best architecture views in the city — you can see Roman ruins, Ottoman mosques, and Orthodox domes all in one sweep.",
+      website: null, phone: null,
+      note: '🏛️ Best architecture panorama in Sofia · Roman ruins visible below',
+      score_authenticity: 3, score_experience: 5, score_food_quality: 4, score_exclusivity: 3, score_value: 3
+    },
+    {
+      rank: 16,
+      name: 'BojanaVitosha Restaurant',
+      address: 'ul. Kumata 75, Boyana district',
+      price_range: '€12–25/person',
+      category: 'lunch',
+      tripadvisor_url: 'https://www.tripadvisor.com/Search?q=BojanaVitosha+Restaurant+Sofia+Bulgaria',
+      description: 'Set in the Boyana foothills at the base of Vitosha mountain, this restaurant has a large garden terrace with views directly up into the forested mountain — completely different energy from the city rooftops. Seasonal menu, regional produce, summer terrace under the trees. Perfect if the group wants to escape downtown and feel the mountain. 15 min by taxi from center.',
+      website: null, phone: null,
+      note: '🏔️ Vitosha mountain backdrop · 15 min from center · Garden terrace',
+      score_authenticity: 4, score_experience: 4, score_food_quality: 4, score_exclusivity: 3, score_value: 4
+    },
+    {
+      rank: 17,
+      name: 'National Theatre Restaurant',
+      address: 'Atop Ivan Vazov National Theatre, 5 Dyakon Ignatiy St',
+      price_range: '€14–26/person',
+      category: 'lunch',
+      tripadvisor_url: 'https://www.tripadvisor.com/Search?q=National+Theatre+Restaurant+Sofia+Bulgaria',
+      description: "Sofia's best-kept secret: a restaurant literally on top of the Ivan Vazov National Theatre, Sofia's most beloved landmark. Not a city panorama view — the view IS the theatre itself, surrounded by Belle Époque architecture and the fountain garden below. Barely known to tourists and even many locals. The kind of place that makes you feel like you discovered something.",
+      website: null, phone: null,
+      note: "🎭 Hidden gem — most locals don't know it exists",
+      score_authenticity: 5, score_experience: 5, score_food_quality: 3, score_exclusivity: 5, score_value: 3
+    },
+    {
+      rank: 18,
+      name: 'The Corner Bar & Dinner',
+      address: '35 Nikola Vaptsarov Blvd, 8th floor, Lozenets',
+      price_range: '€15–28/person',
+      category: 'lunch',
+      tripadvisor_url: 'https://www.tripadvisor.com/Search?q=The+Corner+Bar+Dinner+Sofia+Lozenets',
+      description: "8th-floor rooftop terrace at the corner of two major boulevards in the upscale Lozenets district. Breathtaking 360° city views — Vitosha mountain on one side, city skyline on the other. Versatile venue that works for lunch, dinner, and events. Great for a long lazy afternoon with cocktails and good food. Popular with Sofia's business crowd at lunch.",
+      website: null, phone: null,
+      note: '🌆 360° city + mountain view · Great for a lazy afternoon',
+      score_authenticity: 2, score_experience: 4, score_food_quality: 3, score_exclusivity: 3, score_value: 3
     }
   ];
 
@@ -306,6 +371,66 @@ function seedRestaurants(db: Database.Database) {
       website: null, phone: null,
       note: "🪗 The most Bulgarian night you'll ever have. Controversial. Unmissable.",
       score_authenticity: 4, score_experience: 5, score_food_quality: 2, score_exclusivity: 1, score_value: 4
+    },
+    {
+      rank: 14,
+      name: 'Sense Rooftop Bar & Restaurant',
+      address: '16 Tsar Osvoboditel Blvd, Sense Hotel Sofia',
+      price_range: '€18–35/person',
+      category: 'lunch',
+      tripadvisor_url: 'https://www.tripadvisor.com/Search?q=Sense+Rooftop+Bar+Sofia+Bulgaria',
+      description: 'The most iconic outdoor spot in Sofia — a rooftop terrace with a direct panoramic view of the Alexander Nevsky Cathedral, one of the largest Orthodox cathedrals in the world. Elegant modern setting, cocktails and food that match the setting. Smart casual dress code. Book ahead on weekends — locals and tourists both know this one.',
+      website: null, phone: null,
+      note: '👗 Smart casual required · Book ahead on weekends',
+      score_authenticity: 2, score_experience: 5, score_food_quality: 4, score_exclusivity: 4, score_value: 3
+    },
+    {
+      rank: 15,
+      name: 'La Terrazza di Serdica',
+      address: '2 Budapeshta St, Arena di Serdica Hotel',
+      price_range: '€15–28/person',
+      category: 'lunch',
+      tripadvisor_url: 'https://www.tripadvisor.com/Search?q=La+Terrazza+di+Serdica+Sofia+Bulgaria',
+      description: "Panoramic rooftop restaurant in the heart of Sofia with sweeping views over the city's most beautiful old rooftops and Vitosha Mountain in the background. Italian-influenced menu in a setting that feels like Rome-meets-Sofia. One of the best architecture views in the city — you can see Roman ruins, Ottoman mosques, and Orthodox domes all in one sweep.",
+      website: null, phone: null,
+      note: '🏛️ Best architecture panorama in Sofia · Roman ruins visible below',
+      score_authenticity: 3, score_experience: 5, score_food_quality: 4, score_exclusivity: 3, score_value: 3
+    },
+    {
+      rank: 16,
+      name: 'BojanaVitosha Restaurant',
+      address: 'ul. Kumata 75, Boyana district',
+      price_range: '€12–25/person',
+      category: 'lunch',
+      tripadvisor_url: 'https://www.tripadvisor.com/Search?q=BojanaVitosha+Restaurant+Sofia+Bulgaria',
+      description: 'Set in the Boyana foothills at the base of Vitosha mountain, this restaurant has a large garden terrace with views directly up into the forested mountain — completely different energy from the city rooftops. Seasonal menu, regional produce, summer terrace under the trees. Perfect if the group wants to escape downtown and feel the mountain. 15 min by taxi from center.',
+      website: null, phone: null,
+      note: '🏔️ Vitosha mountain backdrop · 15 min from center · Garden terrace',
+      score_authenticity: 4, score_experience: 4, score_food_quality: 4, score_exclusivity: 3, score_value: 4
+    },
+    {
+      rank: 17,
+      name: 'National Theatre Restaurant',
+      address: 'Atop Ivan Vazov National Theatre, 5 Dyakon Ignatiy St',
+      price_range: '€14–26/person',
+      category: 'lunch',
+      tripadvisor_url: 'https://www.tripadvisor.com/Search?q=National+Theatre+Restaurant+Sofia+Bulgaria',
+      description: "Sofia's best-kept secret: a restaurant literally on top of the Ivan Vazov National Theatre, Sofia's most beloved landmark. Not a city panorama view — the view IS the theatre itself, surrounded by Belle Époque architecture and the fountain garden below. Barely known to tourists and even many locals. The kind of place that makes you feel like you discovered something.",
+      website: null, phone: null,
+      note: "🎭 Hidden gem — most locals don't know it exists",
+      score_authenticity: 5, score_experience: 5, score_food_quality: 3, score_exclusivity: 5, score_value: 3
+    },
+    {
+      rank: 18,
+      name: 'The Corner Bar & Dinner',
+      address: '35 Nikola Vaptsarov Blvd, 8th floor, Lozenets',
+      price_range: '€15–28/person',
+      category: 'lunch',
+      tripadvisor_url: 'https://www.tripadvisor.com/Search?q=The+Corner+Bar+Dinner+Sofia+Lozenets',
+      description: "8th-floor rooftop terrace at the corner of two major boulevards in the upscale Lozenets district. Breathtaking 360° city views — Vitosha mountain on one side, city skyline on the other. Versatile venue that works for lunch, dinner, and events. Great for a long lazy afternoon with cocktails and good food. Popular with Sofia's business crowd at lunch.",
+      website: null, phone: null,
+      note: '🌆 360° city + mountain view · Great for a lazy afternoon',
+      score_authenticity: 2, score_experience: 4, score_food_quality: 3, score_exclusivity: 3, score_value: 3
     }
   ];
 
