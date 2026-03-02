@@ -2,8 +2,8 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Sofia Trip 2026 🇧🇬",
-  description: "Restaurant picks for our Sofia weekend — May 15–18, 2026",
+  title: "Sofia Summit 2026 | Good Old Boys Trips",
+  description: "Restaurant picks for the Sofia Summit — Good Old Boys Trips · May 15–18, 2026 · Bulgaria 🇧🇬",
 };
 
 export const viewport: Viewport = {
