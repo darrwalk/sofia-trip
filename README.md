@@ -1,36 +1,106 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🇧🇬 Sofia Trip 2026
 
-## Getting Started
+A beautiful, mobile-friendly travel planning app for a group weekend trip to Sofia, Bulgaria — **May 15–18, 2026**.
 
-First, run the development server:
+## 🌐 Live App
+
+**[sofia-trip.vercel.app](https://sofia-trip.vercel.app)**
+
+## 📸 Features
+
+- **10 curated restaurants** with detailed descriptions and scores
+- **5-category scoring system**: Authenticity 🏺 · Experience 🎭 · Food Quality 🍽️ · Exclusivity 🤫 · Value 💰
+- **Group voting** — enter your name once (saved in localStorage), then 👍/👎 any restaurant
+- **Real-time vote counts** with voter avatar bubbles (initials)
+- **Sort**: By rank · Most votes · Authenticity · Experience
+- **Filter**: All restaurants · Traditional only (authenticity ≥ 4) · Best shows (experience ≥ 4)
+- **Mobile-first** dark mode UI (slate background, gold/amber accents)
+- Placeholder tabs for Flights & Itinerary (coming soon)
+
+## 🍽️ The Restaurants
+
+| # | Restaurant | Price | Highlight |
+|---|-----------|-------|-----------|
+| 1 | Secret by Chef Petrov | €113/person | ⚠️ 23-course theatrical tasting menu, book NOW |
+| 2 | Hadjidraganovite Izbi | €15–25 | Medieval wine cellar, live folk music |
+| 3 | Chevermeto | €20–35 | Whole lamb on spit + folk dancers |
+| 4 | Pod Lipite | €15–25 | Oldest restaurant in Sofia (1926) 🏛️ |
+| 5 | Manastirska Magernitsa | €15–25 | Monastery recipes, best value 🍞 |
+| 6 | Izbata Tavern | €15–25 | Forgotten regional recipes, artsy crowd |
+| 7 | Cosmos | €30–50 | Bulgarian molecular gastronomy |
+| 8 | MOMA Bulgarian Food & Wine | €15–25 | Modern Bulgarian, folk-themed halls |
+| 9 | Raketa Raki | €12–20 | 150 rakias, Soviet décor, late-night 🚀 |
+| 10 | Staria Chinar | €15–25 | 1922 building, roasted game meats |
+
+## 🛠️ Tech Stack
+
+- **[Next.js 14](https://nextjs.org/)** (App Router, React Server Components, Server Actions)
+- **[Tailwind CSS](https://tailwindcss.com/)** for styling
+- **[better-sqlite3](https://github.com/WiseLibs/better-sqlite3)** for vote persistence
+- Deployed on **[Vercel](https://vercel.com)**
+
+## ⚠️ Database Note
+
+This app uses **SQLite via better-sqlite3** stored in `/tmp` on Vercel's serverless functions. This means:
+- Votes **persist within a warm Lambda container** but may reset on cold starts
+- For production persistence, upgrade to **Vercel Postgres (Neon)** or **Upstash Redis**
+
+See below for upgrade instructions.
+
+## 🚀 Local Development
 
 ```bash
+git clone https://github.com/darrwalk/sofia-trip.git
+cd sofia-trip
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+The SQLite database is auto-created at `/tmp/sofia-trip-data/sofia-trip.db` and seeded with all 10 restaurants on first run.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🔧 Upgrading to Persistent DB
 
-## Learn More
+### Option A: Vercel Postgres (Neon)
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+vercel postgres create
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Then update `src/lib/db.ts` to use `@vercel/postgres` instead of better-sqlite3.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Option B: Upstash Redis
 
-## Deploy on Vercel
+```bash
+npm install @upstash/redis
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Set env vars: `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📁 Project Structure
+
+```
+src/
+├── app/
+│   ├── layout.tsx          # Root layout with dark mode
+│   ├── page.tsx            # Main page (server component)
+│   └── globals.css
+├── components/
+│   ├── RestaurantCard.tsx  # Individual restaurant card
+│   ├── ScoreBar.tsx        # Visual score bars
+│   ├── SortFilter.tsx      # Sort/filter controls + grid
+│   ├── VoteButtons.tsx     # 👍/👎 voting UI
+│   └── VoterBubbles.tsx    # Voter avatar bubbles
+└── lib/
+    ├── db.ts               # SQLite setup + queries
+    └── actions.ts          # Server Action for voting
+```
+
+## 👥 Built For
+
+The Sofia crew — Arnd, and friends. Planning the perfect Bulgarian weekend 🌹
+
+---
+
+*Built with ❤️ using Next.js 14 + Tailwind CSS*
