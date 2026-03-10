@@ -1,6 +1,6 @@
 export type EventItem = {
   name: string;
-  category: 'concert' | 'rooftop' | 'nightlife' | 'landmark' | 'museum' | 'day_trip';
+  category: 'concert' | 'rooftop' | 'nightlife' | 'landmark' | 'museum' | 'day_trip' | 'wild';
   description: string;
   date?: string;
   location?: string;
@@ -73,6 +73,72 @@ export const events: EventItem[] = [
     url: 'https://www.tripadvisor.com/Attraction_Review-g294452-d28826303-Reviews-Fomo_The_Club-Sofia_Sofia_Region.html',
     mapUrl: 'https://maps.google.com/?q=FOMO+Club+Sofia',
   },
+  {
+    name: 'Underground Techno',
+    category: 'nightlife',
+    description: 'Sofia has a raw, unpolished techno scene. Look for "Porno BPM" parties — Jeff Mills, Ben Sims, Ellen Allien have all played here. No advance tickets, word of mouth only.',
+    url: 'https://www.residentadvisor.net/events/bg/sofia',
+    mapUrl: 'https://maps.google.com/?q=Sofia+Techno+Clubs',
+    note: 'Check RA listings closer to the date',
+  },
+
+  // 🔥 WILD — The stuff you won't find in guidebooks
+  {
+    name: 'AK-47 Shooting Range',
+    category: 'wild',
+    description: 'Fire Soviet-era weapons in the Bulgarian countryside. AK-47, Glock, shotguns. 200 rounds each. Transport from Sofia included. "Fantastic experience" — 5★ reviews.',
+    url: 'https://www.tripadvisor.com/AttractionProductReview-g294452-d17404201-3_Hours_VIP_Shooting_Range_Package-Sofia_Sofia_Region.html',
+    mapUrl: 'https://maps.google.com/?q=Shooting+Range+Sofia+Bulgaria',
+    note: '3-hour VIP package • €80-120/person',
+  },
+  {
+    name: 'Buzludzha UFO Monument',
+    category: 'wild',
+    description: 'The most insane abandoned building in Europe. A communist flying saucer on a mountain peak, frozen in time since 1989. Graffiti-covered, crumbling, and utterly surreal. 50,000 urban explorers visit yearly.',
+    url: 'https://www.atlasobscura.com/places/buzludzha-monument',
+    mapUrl: 'https://maps.google.com/?q=Buzludzha+Monument+Bulgaria',
+    note: '3h from Sofia • Hire a 4x4 or join a tour • Check access status',
+  },
+  {
+    name: 'Secret Police Bunker Tour',
+    category: 'wild',
+    description: 'Walk the tunnels where the communist secret police operated. Network of underground bunkers — some still classified. The paranoid architecture of a surveillance state.',
+    url: 'https://freesofiatour.com/tours/communism-tour/',
+    mapUrl: 'https://maps.google.com/?q=Communist+Tour+Sofia',
+    note: 'Book the extended Communism Tour',
+  },
+  {
+    name: 'Princess Casino',
+    category: 'wild',
+    description: 'Bulgaria\'s best casino — proper Vegas energy in Eastern Europe. Blackjack, roulette, poker. Dress code applies. "The best casino experience in Bulgaria."',
+    url: 'https://www.tripadvisor.com/Attraction_Review-g294452-d10506795-Reviews-Princess_Casino_Sofia-Sofia_Sofia_Region.html',
+    mapUrl: 'https://maps.google.com/?q=Princess+Casino+Sofia',
+    note: 'Open 24/7 • Smart casual required',
+  },
+  {
+    name: 'Gentlemen\'s Evening',
+    category: 'wild',
+    description: 'Sofia has a reputation for... hospitality. Several upscale gentlemen\'s clubs with shows, bottle service, and private rooms. The Bulgarian lev makes it affordable.',
+    url: 'https://www.google.com/maps/search/gentlemens+club+Sofia+Bulgaria',
+    mapUrl: 'https://maps.google.com/?q=Gentlemens+Club+Sofia+Center',
+    note: 'Ask taxi drivers for current recommendations',
+  },
+  {
+    name: 'Mineral Baths Day',
+    category: 'wild',
+    description: 'Sofia sits on natural hot springs. Sapareva Banya (1.5h away) has an outdoor mineral spa: 103°F thermal pools, ice plunges, saunas. Combine with Rila Monastery for a day of extremes.',
+    url: 'https://www.getyourguide.com/sapareva-banya-l136373/from-sofia-borovets-resort-and-thermal-bath-day-trip-t409375/',
+    mapUrl: 'https://maps.google.com/?q=Sapareva+Banya+Thermal+Spa',
+    note: 'Book the Rila + Spa combo tour',
+  },
+  {
+    name: 'Abandoned Bulgaria Expedition',
+    category: 'wild',
+    description: '6-day dark tourism road trip to abandoned communist monuments, military bases, and crumbling socialist architecture. Not for the faint-hearted. The ultimate urbex experience.',
+    url: 'https://abandonedbulgaria.com/',
+    mapUrl: 'https://maps.google.com/?q=Communist+Monuments+Bulgaria',
+    note: 'Multi-day tour • Book in advance',
+  },
 
   // Landmarks
   {
@@ -124,6 +190,7 @@ export const categoryLabels: Record<EventItem['category'], { emoji: string; labe
   concert: { emoji: '🎵', label: 'Concerts' },
   rooftop: { emoji: '🌇', label: 'Rooftop Bars' },
   nightlife: { emoji: '🌙', label: 'Nightlife' },
+  wild: { emoji: '🔥', label: 'Wild Cards' },
   landmark: { emoji: '🏛️', label: 'Landmarks' },
   museum: { emoji: '🖼️', label: 'Museums' },
   day_trip: { emoji: '🏔️', label: 'Day Trips' },
