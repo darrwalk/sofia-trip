@@ -25,9 +25,9 @@ export function AppShell({ restaurants }: { restaurants: Restaurant[] }) {
   const totalVoters = new Set(restaurants.flatMap(r => r.votes.map(v => v.voter_name))).size;
 
   return (
-    <div className="min-h-screen bg-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50">
       {/* Branded Header */}
-      <header style={{ background: '#1a1a2e' }} className="border-b border-amber-900/40 sticky top-0 z-10 backdrop-blur">
+      <header style={{ background: 'linear-gradient(to right, #f97316, #f59e0b)' }} className="border-b border-amber-900/40 sticky top-0 z-10 backdrop-blur">
         <div className="max-w-4xl mx-auto px-4 py-4">
           {/* Top branding row */}
           <div className="flex flex-col sm:flex-row items-center gap-4">
@@ -59,8 +59,8 @@ export function AppShell({ restaurants }: { restaurants: Restaurant[] }) {
 
             <div className="hidden sm:flex ml-auto text-right">
               <div>
-                <p className="text-xs text-slate-400">{totalVoters} voters</p>
-                <p className="text-xs text-slate-500">{restaurants.length} restaurants</p>
+                <p className="text-xs text-gray-400">{totalVoters} voters</p>
+                <p className="text-xs text-gray-500">{restaurants.length} restaurants</p>
               </div>
             </div>
           </div>
@@ -76,7 +76,7 @@ export function AppShell({ restaurants }: { restaurants: Restaurant[] }) {
           <>
             {/* Trip summary banner */}
             <div className="bg-gradient-to-r from-amber-500/10 to-rose-500/10 border border-amber-500/20 rounded-2xl p-4 mb-6">
-              <p className="text-sm text-slate-300">
+              <p className="text-sm text-gray-300">
                 <span className="text-amber-400 font-semibold">Good Old Boys Trips · Sofia 🇧🇬 · May 15–18, 2026</span>
                 {' '}— Vote on where you want to eat! The best picks rise to the top.
                 Your name is saved locally, so you only need to enter it once.
@@ -84,7 +84,7 @@ export function AppShell({ restaurants }: { restaurants: Restaurant[] }) {
             </div>
 
             {/* Category legend */}
-            <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-500 mb-6 bg-slate-800/50 rounded-xl p-3">
+            <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500 mb-6 bg-white/50 rounded-xl p-3">
               <span title="How deeply rooted in real Bulgarian culinary tradition">🏺 Authenticity</span>
               <span title="The show, theater, the story you'll tell people about">🎭 Experience</span>
               <span title="Actual cooking excellence">🍽️ Food Quality</span>
@@ -102,7 +102,7 @@ export function AppShell({ restaurants }: { restaurants: Restaurant[] }) {
       </main>
 
       {/* Footer */}
-      <footer className="text-center py-8 text-slate-500 text-xs">
+      <footer className="text-center py-8 text-gray-500 text-xs">
         <p>
           Made with ✨ by{' '}
           <a
@@ -114,7 +114,7 @@ export function AppShell({ restaurants }: { restaurants: Restaurant[] }) {
             Claudia
           </a>
         </p>
-              <p className="text-slate-600 mt-1">Last updated: March 10, 2026 (v6 - all flights)</p>
+              <p className="text-gray-600 mt-1">Last updated: March 10, 2026 (v7 - summer vibes)</p>
       </footer>
     </div>
   );
