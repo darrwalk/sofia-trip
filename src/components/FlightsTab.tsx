@@ -25,6 +25,7 @@ export function FlightsTab() {
         </div>
         <div className="text-right">
           <p className="text-sm text-slate-400">{flights[0]?.airline}</p>
+          <p className="text-sm text-slate-300 font-medium mt-0.5">👤 {flights[0]?.passenger}</p>
         </div>
       </div>
 
