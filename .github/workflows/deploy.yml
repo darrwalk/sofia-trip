@@ -1,11 +1,24 @@
-name: Deploy to Coolify
+name: Build & Deploy to Coolify
 on:
   push:
     branches: [main]
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+      
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Build (catch errors before deploy)
+        run: npm run build
+      
       - name: Trigger Coolify deploy
         env:
           COOLIFY_TOKEN: ${{ secrets.COOLIFY_TOKEN }}
