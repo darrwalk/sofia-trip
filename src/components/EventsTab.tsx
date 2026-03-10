@@ -1,6 +1,6 @@
 'use client';
 
-import { events, categoryLabels, type EventItem } from '@/data/events';
+import { events, categoryLabels, type EventItem } from '../data/events';
 import { useState } from 'react';
 
 type CategoryFilter = EventItem['category'] | 'all';

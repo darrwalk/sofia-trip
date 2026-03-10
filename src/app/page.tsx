@@ -1,5 +1,5 @@
-import { getAllRestaurantsWithVotes } from '@/lib/db';
-import { AppShell } from '@/components/AppShell';
+import { getAllRestaurantsWithVotes } from '../lib/db';
+import { AppShell } from '../components/AppShell';
 
 export const dynamic = 'force-dynamic';
 

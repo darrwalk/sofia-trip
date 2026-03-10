@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { castVote } from '@/lib/actions';
+import { castVote } from '../lib/actions';
 import { VoterBubbles } from './VoterBubbles';
 
 type Vote = {

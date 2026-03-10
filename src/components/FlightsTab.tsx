@@ -1,6 +1,6 @@
 'use client';
 
-import { flights } from '@/data/flights';
+import { flights } from '../data/flights';
 
 export function FlightsTab() {
   const arrivals = flights
@@ -115,7 +115,7 @@ export function FlightsTab() {
       <div>
         <h3 className="text-sm font-semibold text-gray-500 mb-3">📋 Booking References</h3>
         <div className="flex flex-wrap gap-2">
-          {[...new Set(flights.filter(f => f.confirmation).map(f => `${f.passenger}: ${f.confirmation}`))].map((ref, i) => (
+          {Array.from(new Set(flights.filter(f => f.confirmation).map(f => `${f.passenger}: ${f.confirmation}`))).map((ref, i) => (
             <span key={i} className="bg-white border-2 border-orange-200 rounded-lg px-3 py-2 text-sm shadow-sm">
               <span className="text-gray-600">{ref.split(': ')[0]}:</span>
               <span className="text-orange-600 font-mono font-bold ml-1">{ref.split(': ')[1]}</span>
