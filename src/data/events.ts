@@ -24,17 +24,20 @@ export const events: EventItem[] = [
     name: 'Sense Rooftop',
     category: 'rooftop',
     description: 'Panoramic rooftop bar with Vitosha views and craft cocktails.',
-    url: 'https://sensehotel.com/rooftop-bar/',
+    url: 'https://maps.google.com/?q=Sense+Rooftop+Bar+Sofia',
+    note: 'Book 2+ days ahead on weekends',
   },
   {
     name: 'Sky Garden',
     category: 'rooftop',
     description: 'Open-air garden bar on the top floor with DJ sets.',
+    url: 'https://maps.google.com/?q=Sky+Garden+Rooftop+Sofia',
   },
   {
     name: 'Cosmos',
     category: 'rooftop',
     description: 'Sleek rooftop lounge with sunset vibes over the city.',
+    url: 'https://maps.google.com/?q=Cosmos+Restaurant+Sofia',
   },
 
   // Nightlife
@@ -42,17 +45,20 @@ export const events: EventItem[] = [
     name: 'Raketa Rakia Bar',
     category: 'nightlife',
     description: 'The best rakia selection in Sofia — dozens of varieties, Soviet-retro decor.',
-    url: 'https://www.facebook.com/raketarakiabar/',
+    url: 'https://maps.google.com/?q=Raketa+Rakia+Bar+Sofia',
   },
   {
     name: 'Hambara',
     category: 'nightlife',
     description: 'Hidden speakeasy vibes, candle-lit, legendary cocktails.',
+    url: 'https://maps.google.com/?q=Hambara+Bar+Sofia',
+    note: 'No sign outside — look for the hidden door',
   },
   {
     name: 'FOMO Club',
     category: 'nightlife',
     description: 'Electronic music and late-night energy — Sofia\'s club scene.',
+    url: 'https://maps.google.com/?q=FOMO+Club+Sofia',
   },
 
   // Landmarks
