@@ -116,12 +116,13 @@ export const events: EventItem[] = [
     note: 'Open 24/7 • Smart casual required',
   },
   {
-    name: 'Gentlemen\'s Evening',
+    name: 'Night Club Simona',
     category: 'wild',
-    description: 'Sofia has a reputation for... hospitality. Several upscale gentlemen\'s clubs with shows, bottle service, and private rooms. The Bulgarian lev makes it affordable.',
-    url: 'https://www.google.com/maps/search/gentlemens+club+Sofia+Bulgaria',
-    mapUrl: 'https://maps.google.com/?q=Gentlemens+Club+Sofia+Center',
-    note: 'Ask taxi drivers for current recommendations',
+    description: 'Sofia\'s most-recommended gentlemen\'s club. Part of the Simona Complex — leather furniture, disco lights, full shows, private rooms. The Bulgarian lev makes it very affordable by Western standards.',
+    location: 'bul. Cherni Vrah 100, Sofia',
+    url: 'https://bulgaria-infoguide.com/sofia/night-club-simona/',
+    mapUrl: 'https://maps.google.com/?q=Night+Club+Simona+Sofia',
+    note: 'Call ahead for groups • Bottle service available',
   },
   {
     name: 'Mineral Baths Day',
