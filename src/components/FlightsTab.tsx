@@ -2,82 +2,127 @@
 
 import { flights } from '@/data/flights';
 
-function formatDate(dateStr: string): string {
-  const d = new Date(dateStr + 'T00:00:00');
-  return d.toLocaleDateString('en-GB', {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  });
-}
-
 export function FlightsTab() {
-  const confirmation = flights[0]?.confirmation;
+  const arrivals = flights
+    .filter(f => f.direction === 'outbound')
+    .sort((a, b) => a.arrival.time.localeCompare(b.arrival.time));
+  
+  const departures = flights
+    .filter(f => f.direction === 'return')
+    .sort((a, b) => a.departure.time.localeCompare(b.departure.time));
 
   return (
-    <div className="space-y-4">
-      {/* Confirmation badge */}
-      <div className="bg-slate-800/60 border border-slate-700 rounded-2xl p-4 flex items-center justify-between">
-        <div>
-          <p className="text-xs text-slate-500 uppercase tracking-wide font-medium">Booking Reference</p>
-          <p className="text-2xl font-mono font-bold text-amber-400 mt-1">{confirmation}</p>
-        </div>
-        <div className="text-right">
-          <p className="text-sm text-slate-400">{flights[0]?.airline}</p>
-          <p className="text-sm text-slate-300 font-medium mt-0.5">👤 {flights[0]?.passenger}</p>
+    <div className="space-y-8">
+      {/* ARRIVALS */}
+      <div>
+        <h3 className="text-xl font-bold text-emerald-700 mb-4 flex items-center gap-2">
+          <span>✈️</span> Arrivals in Sofia
+          <span className="text-sm font-normal text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded-full">Fri, May 15</span>
+        </h3>
+        <div className="bg-white border-2 border-emerald-200 rounded-xl overflow-hidden shadow-sm">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b-2 border-emerald-100 text-xs text-emerald-700 uppercase bg-emerald-50">
+                <th className="text-left py-3 px-4">Time</th>
+                <th className="text-left py-3 px-4">Who</th>
+                <th className="text-left py-3 px-4">From</th>
+                <th className="text-left py-3 px-4 hidden sm:table-cell">Flight</th>
+              </tr>
+            </thead>
+            <tbody>
+              {arrivals.map((flight, i) => (
+                <tr key={i} className="border-b border-emerald-50 last:border-0 hover:bg-emerald-50/50">
+                  <td className="py-4 px-4">
+                    <span className="text-2xl font-bold text-gray-800">{flight.arrival.time}</span>
+                  </td>
+                  <td className="py-4 px-4">
+                    <span className="font-bold text-orange-600 text-lg">{flight.passenger}</span>
+                  </td>
+                  <td className="py-4 px-4">
+                    <span className="text-gray-700 font-medium">{flight.departure.code}</span>
+                    {flight.departure.code !== '???' && (
+                      <span className="text-gray-500 text-sm ml-1">({flight.departure.airport})</span>
+                    )}
+                  </td>
+                  <td className="py-4 px-4 hidden sm:table-cell">
+                    {flight.flightNumber ? (
+                      <span className="text-gray-600 font-mono bg-gray-100 px-2 py-1 rounded">{flight.flightNumber}</span>
+                    ) : (
+                      <span className="text-gray-400">—</span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
 
-      {/* Flight cards */}
-      {flights.map((flight, i) => (
-        <div
-          key={i}
-          className="bg-slate-800/60 border border-slate-700 rounded-2xl p-5 hover:border-slate-600 transition-colors"
-        >
-          {/* Direction badge */}
-          <div className="flex items-center gap-2 mb-4">
-            <span
-              className={`px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide ${
-                flight.direction === 'outbound'
-                  ? 'bg-emerald-500/20 text-emerald-400'
-                  : 'bg-blue-500/20 text-blue-400'
-              }`}
-            >
-              {flight.direction === 'outbound' ? '→ Outbound' : '← Return'}
-            </span>
-            <span className="text-xs text-slate-500">{flight.flightNumber}</span>
-            <span className="text-xs text-slate-600 ml-auto">{formatDate(flight.date)}</span>
-          </div>
-
-          {/* Route */}
-          <div className="flex items-center gap-4">
-            {/* Departure */}
-            <div className="text-center flex-1">
-              <p className="text-3xl font-bold text-slate-100">{flight.departure.time}</p>
-              <p className="text-lg font-semibold text-amber-400 mt-1">{flight.departure.code}</p>
-              <p className="text-xs text-slate-500">{flight.departure.airport}</p>
-            </div>
-
-            {/* Arrow */}
-            <div className="flex flex-col items-center gap-1 flex-shrink-0">
-              <div className="w-16 sm:w-24 h-px bg-slate-600 relative">
-                <div className="absolute right-0 top-1/2 -translate-y-1/2 w-0 h-0 border-l-[6px] border-l-slate-600 border-y-[4px] border-y-transparent" />
-              </div>
-              <p className="text-[10px] text-slate-600">
-                {flight.direction === 'outbound' ? '3h 15m' : '2h 25m'}
-              </p>
-            </div>
-
-            {/* Arrival */}
-            <div className="text-center flex-1">
-              <p className="text-3xl font-bold text-slate-100">{flight.arrival.time}</p>
-              <p className="text-lg font-semibold text-amber-400 mt-1">{flight.arrival.code}</p>
-              <p className="text-xs text-slate-500">{flight.arrival.airport}</p>
-            </div>
-          </div>
+      {/* DEPARTURES */}
+      <div>
+        <h3 className="text-xl font-bold text-blue-700 mb-4 flex items-center gap-2">
+          <span>🛫</span> Departures from Sofia
+        </h3>
+        <div className="bg-white border-2 border-blue-200 rounded-xl overflow-hidden shadow-sm">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b-2 border-blue-100 text-xs text-blue-700 uppercase bg-blue-50">
+                <th className="text-left py-3 px-4">Date</th>
+                <th className="text-left py-3 px-4">Time</th>
+                <th className="text-left py-3 px-4">Who</th>
+                <th className="text-left py-3 px-4">To</th>
+                <th className="text-left py-3 px-4 hidden sm:table-cell">Flight</th>
+              </tr>
+            </thead>
+            <tbody>
+              {departures.map((flight, i) => {
+                const d = new Date(flight.date + 'T00:00:00');
+                const dateStr = d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+                return (
+                  <tr key={i} className="border-b border-blue-50 last:border-0 hover:bg-blue-50/50">
+                    <td className="py-4 px-4">
+                      <span className="text-gray-700 font-medium">{dateStr}</span>
+                    </td>
+                    <td className="py-4 px-4">
+                      <span className="text-2xl font-bold text-gray-800">{flight.departure.time}</span>
+                    </td>
+                    <td className="py-4 px-4">
+                      <span className="font-bold text-orange-600 text-lg">{flight.passenger}</span>
+                    </td>
+                    <td className="py-4 px-4">
+                      <span className="text-gray-700 font-medium">{flight.arrival.code}</span>
+                      <span className="text-gray-500 text-sm ml-1">({flight.arrival.airport})</span>
+                    </td>
+                    <td className="py-4 px-4 hidden sm:table-cell">
+                      {flight.flightNumber ? (
+                        <span className="text-gray-600 font-mono bg-gray-100 px-2 py-1 rounded">{flight.flightNumber}</span>
+                      ) : (
+                        <span className="text-gray-400">—</span>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
-      ))}
+        <p className="text-sm text-orange-700 mt-3 px-1 bg-orange-50 border border-orange-200 rounded-lg py-2 text-center">
+          ⚠️ Stefan & Wassily return flights TBD
+        </p>
+      </div>
+
+      {/* Booking references */}
+      <div>
+        <h3 className="text-sm font-semibold text-gray-500 mb-3">📋 Booking References</h3>
+        <div className="flex flex-wrap gap-2">
+          {[...new Set(flights.filter(f => f.confirmation).map(f => `${f.passenger}: ${f.confirmation}`))].map((ref, i) => (
+            <span key={i} className="bg-white border-2 border-orange-200 rounded-lg px-3 py-2 text-sm shadow-sm">
+              <span className="text-gray-600">{ref.split(': ')[0]}:</span>
+              <span className="text-orange-600 font-mono font-bold ml-1">{ref.split(': ')[1]}</span>
+            </span>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

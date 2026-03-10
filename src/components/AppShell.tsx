@@ -114,7 +114,7 @@ export function AppShell({ restaurants }: { restaurants: Restaurant[] }) {
             Claudia
           </a>
         </p>
-              <p className="text-gray-600 mt-1">Last updated: March 10, 2026 (v7 - summer vibes)</p>
+              <p className="text-gray-600 mt-1">Last updated: March 10, 2026 (v8 - flights fixed)</p>
       </footer>
     </div>
   );
