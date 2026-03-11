@@ -45,6 +45,16 @@ export const flights: Flight[] = [
     arrival: { airport: 'Sofia', code: 'SOF', time: '13:20' },
   },
   
+  // Jan
+  {
+    airline: 'Swiss',
+    direction: 'outbound',
+    date: '2026-05-15',
+    passenger: 'Jan',
+    departure: { airport: 'Zurich', code: 'ZRH', time: '11:50' },
+    arrival: { airport: 'Sofia', code: 'SOF', time: '15:05' },
+  },
+
   // Stefan arrives last
   {
     airline: 'TBD',
@@ -68,8 +78,18 @@ export const flights: Flight[] = [
     departure: { airport: 'Sofia', code: 'SOF', time: '14:20' },
     arrival: { airport: 'Frankfurt', code: 'FRA', time: '15:50' },
   },
+
+  // Jan - Mon May 18
+  {
+    airline: 'Air Baltic',
+    direction: 'return',
+    date: '2026-05-18',
+    passenger: 'Jan',
+    departure: { airport: 'Sofia', code: 'SOF', time: '15:40' },
+    arrival: { airport: 'Zurich', code: 'ZRH', time: '17:00' },
+  },
   
-  // Arnd - Mon May 19
+  // Arnd - Tue May 19
   {
     confirmation: 'JNC77T',
     airline: 'Wizz Air',
