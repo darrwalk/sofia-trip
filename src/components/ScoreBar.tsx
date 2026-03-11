@@ -19,7 +19,7 @@ export function ScoreBar(props: ScoreBarProps) {
         const score = props[key];
         return (
           <div key={key} className="flex items-center gap-2" title={tooltip}>
-            <span className="text-xs text-slate-400 w-28 shrink-0">{label}</span>
+            <span className="text-xs text-gray-500 w-28 shrink-0">{label}</span>
             <div className="flex gap-0.5">
               {[1, 2, 3, 4, 5].map(i => (
                 <div
@@ -31,12 +31,12 @@ export function ScoreBar(props: ScoreBarProps) {
                         : score >= 4
                         ? 'bg-amber-500'
                         : 'bg-amber-600/70'
-                      : 'bg-slate-700'
+                      : 'bg-gray-200'
                   }`}
                 />
               ))}
             </div>
-            <span className="text-xs text-slate-500">{score}/5</span>
+            <span className="text-xs text-gray-400">{score}/5</span>
           </div>
         );
       })}

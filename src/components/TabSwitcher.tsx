@@ -25,8 +25,8 @@ export function TabSwitcher({
           onClick={() => onTabChange(tab.id)}
           className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all ${
             activeTab === tab.id
-              ? 'bg-amber-500 text-slate-900'
-              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-700/50'
+              ? 'bg-white text-orange-700 shadow-sm'
+              : 'text-orange-100 hover:text-white hover:bg-orange-600/50'
           }`}
         >
           {tab.emoji} {tab.label}

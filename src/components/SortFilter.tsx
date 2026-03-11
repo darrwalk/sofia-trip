@@ -32,18 +32,13 @@ export function SortFilter({ restaurants }: { restaurants: Restaurant[] }) {
 
   const processed = useMemo(() => {
     let items = [...restaurants];
-
-    // Category filter
     if (category === 'traditional') items = items.filter(r => r.category === 'traditional');
     if (category === 'dinner_club') items = items.filter(r => r.category === 'dinner_club');
     if (category === 'lunch') items = items.filter(r => r.category === 'lunch');
     if (category === 'snack') items = items.filter(r => r.category === 'snack');
     if (category === 'bar') items = items.filter(r => r.category === 'bar');
-
-    // Score filter
     if (filter === 'authentic') items = items.filter(r => r.score_authenticity >= 4);
     if (filter === 'shows') items = items.filter(r => r.score_experience >= 4);
-
     items.sort((a, b) => {
       if (sort === 'rank') return a.rank - b.rank;
       if (sort === 'votes') return (b.upCount - b.downCount) - (a.upCount - a.downCount);
@@ -51,7 +46,6 @@ export function SortFilter({ restaurants }: { restaurants: Restaurant[] }) {
       if (sort === 'experience') return b.score_experience - a.score_experience;
       return 0;
     });
-
     return items;
   }, [restaurants, sort, filter, category]);
 
@@ -68,96 +62,50 @@ export function SortFilter({ restaurants }: { restaurants: Restaurant[] }) {
     { key: 'shows', label: '🎭 Best Shows' },
   ];
 
+  const catBtn = (key: CategoryKey, label: string, activeColor: string) => (
+    <button
+      key={key}
+      onClick={() => setCategory(key)}
+      className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all border ${
+        category === key
+          ? `${activeColor} border-transparent`
+          : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300'
+      }`}
+    >
+      {label}
+    </button>
+  );
+
   return (
     <div>
       {/* Category Tabs */}
       <div className="flex flex-wrap gap-2 mb-5">
-        <button
-          onClick={() => setCategory('all')}
-          className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all border ${
-            category === 'all'
-              ? 'bg-amber-500 text-slate-900 border-amber-500'
-              : 'bg-slate-800 text-slate-300 border-slate-600 hover:border-slate-500'
-          }`}
-        >
-          All ({restaurants.length})
-        </button>
-        <button
-          onClick={() => setCategory('traditional')}
-          className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all border ${
-            category === 'traditional'
-              ? 'bg-amber-500 text-slate-900 border-amber-500'
-              : 'bg-slate-800 text-slate-300 border-slate-600 hover:border-slate-500'
-          }`}
-        >
-          🍽️ Traditional ({traditionalCount})
-        </button>
-        <button
-          onClick={() => setCategory('dinner_club')}
-          className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all border ${
-            category === 'dinner_club'
-              ? 'bg-purple-500 text-white border-purple-500'
-              : 'bg-slate-800 text-slate-300 border-slate-600 hover:border-purple-500/50'
-          }`}
-        >
-          🍸 Dinner + Club ({dinnerClubCount})
-        </button>
-        <button
-          onClick={() => setCategory('lunch')}
-          className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all border ${
-            category === 'lunch'
-              ? 'bg-emerald-500 text-white border-emerald-500'
-              : 'bg-slate-800 text-slate-300 border-slate-600 hover:border-emerald-500/50'
-          }`}
-        >
-          ☀️ Lunch & Views ({lunchCount})
-        </button>
-        <button
-          onClick={() => setCategory('snack')}
-          className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all border ${
-            category === 'snack'
-              ? 'bg-orange-400 text-slate-900 border-orange-400'
-              : 'bg-slate-800 text-slate-300 border-slate-600 hover:border-orange-400/50'
-          }`}
-        >
-          🥙 Quick Bites ({snackCount})
-        </button>
-        <button
-          onClick={() => setCategory('bar')}
-          className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all border ${
-            category === 'bar'
-              ? 'bg-blue-500 text-white border-blue-500'
-              : 'bg-slate-800 text-slate-300 border-slate-600 hover:border-blue-500/50'
-          }`}
-        >
-          🍺 Beer & Bars ({barCount})
-        </button>
+        {catBtn('all', `All (${restaurants.length})`, 'bg-amber-500 text-white')}
+        {catBtn('traditional', `🍽️ Traditional (${traditionalCount})`, 'bg-amber-500 text-white')}
+        {catBtn('dinner_club', `🍸 Dinner + Club (${dinnerClubCount})`, 'bg-purple-500 text-white')}
+        {catBtn('lunch', `☀️ Lunch & Views (${lunchCount})`, 'bg-emerald-500 text-white')}
+        {catBtn('snack', `🥙 Quick Bites (${snackCount})`, 'bg-orange-400 text-white')}
+        {catBtn('bar', `🍺 Beer & Bars (${barCount})`, 'bg-blue-500 text-white')}
       </div>
 
-      {/* Dinner + Club Banner */}
+      {/* Category Banners */}
       {category === 'dinner_club' && (
-        <div className="mb-5 bg-purple-500/10 border border-purple-500/30 rounded-xl px-4 py-3 text-sm text-purple-200">
+        <div className="mb-5 bg-purple-50 border border-purple-200 rounded-xl px-4 py-3 text-sm text-purple-800">
           🌙 These places start as restaurants and end as clubs — no venue change needed.
         </div>
       )}
-
-      {/* Lunch & Views Banner */}
       {category === 'lunch' && (
-        <div className="mb-5 bg-emerald-500/10 border border-emerald-500/30 rounded-xl px-4 py-3 text-sm text-emerald-200">
+        <div className="mb-5 bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3 text-sm text-emerald-800">
           ☀️ Outdoor terraces and rooftops — best enjoyed between noon and 4pm.
         </div>
       )}
-
-      {/* Quick Bites Banner */}
       {category === 'snack' && (
-        <div className="mb-5 bg-orange-400/10 border border-orange-400/30 rounded-xl px-4 py-3 text-sm text-orange-200">
+        <div className="mb-5 bg-orange-50 border border-orange-200 rounded-xl px-4 py-3 text-sm text-orange-800">
           🥙 Street food and bakeries — Sofia&apos;s cheapest and most authentic bites.
         </div>
       )}
-
-      {/* Beer & Bars Banner */}
       {category === 'bar' && (
-        <div className="mb-5 bg-blue-500/10 border border-blue-500/30 rounded-xl px-4 py-3 text-sm text-blue-200">
+        <div className="mb-5 bg-blue-50 border border-blue-200 rounded-xl px-4 py-3 text-sm text-blue-800">
           🍺 Cool bars and craft beer spots — afternoon drinks to midnight cocktails.
         </div>
       )}
@@ -165,7 +113,7 @@ export function SortFilter({ restaurants }: { restaurants: Restaurant[] }) {
       {/* Controls */}
       <div className="flex flex-col gap-3 mb-6">
         <div>
-          <p className="text-xs text-slate-500 mb-1.5 font-medium uppercase tracking-wide">Sort by</p>
+          <p className="text-xs text-gray-400 mb-1.5 font-medium uppercase tracking-wide">Sort by</p>
           <div className="flex flex-wrap gap-2">
             {sortButtons.map(b => (
               <button
@@ -173,8 +121,8 @@ export function SortFilter({ restaurants }: { restaurants: Restaurant[] }) {
                 onClick={() => setSort(b.key)}
                 className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
                   sort === b.key
-                    ? 'bg-amber-500 text-slate-900'
-                    : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                    ? 'bg-amber-500 text-white'
+                    : 'bg-white text-gray-600 border border-gray-200 hover:border-gray-300'
                 }`}
               >
                 {b.label}
@@ -183,7 +131,7 @@ export function SortFilter({ restaurants }: { restaurants: Restaurant[] }) {
           </div>
         </div>
         <div>
-          <p className="text-xs text-slate-500 mb-1.5 font-medium uppercase tracking-wide">Filter</p>
+          <p className="text-xs text-gray-400 mb-1.5 font-medium uppercase tracking-wide">Filter</p>
           <div className="flex flex-wrap gap-2">
             {filterButtons.map(b => (
               <button
@@ -191,8 +139,8 @@ export function SortFilter({ restaurants }: { restaurants: Restaurant[] }) {
                 onClick={() => setFilter(b.key)}
                 className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
                   filter === b.key
-                    ? 'bg-amber-500 text-slate-900'
-                    : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                    ? 'bg-amber-500 text-white'
+                    : 'bg-white text-gray-600 border border-gray-200 hover:border-gray-300'
                 }`}
               >
                 {b.label}
@@ -202,12 +150,10 @@ export function SortFilter({ restaurants }: { restaurants: Restaurant[] }) {
         </div>
       </div>
 
-      {/* Count */}
-      <p className="text-xs text-slate-500 mb-4">
+      <p className="text-xs text-gray-400 mb-4">
         Showing {processed.length} of {restaurants.length} restaurants
       </p>
 
-      {/* Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {processed.map(r => (
           <RestaurantCard key={r.id} restaurant={r} />
@@ -215,7 +161,7 @@ export function SortFilter({ restaurants }: { restaurants: Restaurant[] }) {
       </div>
 
       {processed.length === 0 && (
-        <div className="text-center py-12 text-slate-500">
+        <div className="text-center py-12 text-gray-400">
           No restaurants match this filter.
         </div>
       )}

@@ -25,11 +25,10 @@ export function AppShell({ restaurants }: { restaurants: Restaurant[] }) {
   const totalVoters = new Set(restaurants.flatMap(r => r.votes.map(v => v.voter_name))).size;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50">
+    <div className="min-h-screen bg-gray-50">
       {/* Branded Header */}
-      <header style={{ background: 'linear-gradient(to right, #f97316, #f59e0b)' }} className="border-b border-amber-900/40 sticky top-0 z-10 backdrop-blur">
+      <header className="bg-gradient-to-r from-orange-500 to-amber-500 border-b border-amber-600 sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-4 py-4">
-          {/* Top branding row */}
           <div className="flex flex-col sm:flex-row items-center gap-4">
             <div className="flex-shrink-0">
               <Image
@@ -43,29 +42,25 @@ export function AppShell({ restaurants }: { restaurants: Restaurant[] }) {
             </div>
 
             <div className="text-center sm:text-left">
-              <p
-                className="text-amber-400 font-semibold uppercase tracking-widest"
-                style={{ fontSize: '11px', letterSpacing: '0.2em' }}
-              >
+              <p className="text-orange-100 font-semibold uppercase tracking-widest text-xs">
                 Good Old Boys Trips
               </p>
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-amber-100 leading-tight mt-0.5">
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-white leading-tight mt-0.5">
                 Sofia Summit 2026
               </h1>
-              <p className="text-sm text-amber-300/70 mt-0.5">
+              <p className="text-sm text-orange-100 mt-0.5">
                 May 15–18, 2026 · Bulgaria 🇧🇬
               </p>
             </div>
 
             <div className="hidden sm:flex ml-auto text-right">
               <div>
-                <p className="text-xs text-gray-400">{totalVoters} voters</p>
-                <p className="text-xs text-gray-500">{restaurants.length} restaurants</p>
+                <p className="text-xs text-orange-100">{totalVoters} voters</p>
+                <p className="text-xs text-orange-200">{restaurants.length} restaurants</p>
               </div>
             </div>
           </div>
 
-          {/* Nav Tabs */}
           <TabSwitcher activeTab={activeTab} onTabChange={setActiveTab} />
         </div>
       </header>
@@ -74,17 +69,15 @@ export function AppShell({ restaurants }: { restaurants: Restaurant[] }) {
       <main className="max-w-4xl mx-auto px-4 py-6">
         {activeTab === 'restaurants' && (
           <>
-            {/* Trip summary banner */}
-            <div className="bg-gradient-to-r from-amber-500/10 to-rose-500/10 border border-amber-500/20 rounded-2xl p-4 mb-6">
-              <p className="text-sm text-gray-300">
-                <span className="text-amber-400 font-semibold">Good Old Boys Trips · Sofia 🇧🇬 · May 15–18, 2026</span>
+            <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-6">
+              <p className="text-sm text-gray-700">
+                <span className="text-amber-700 font-semibold">Good Old Boys Trips · Sofia 🇧🇬 · May 15–18, 2026</span>
                 {' '}— Vote on where you want to eat! The best picks rise to the top.
                 Your name is saved locally, so you only need to enter it once.
               </p>
             </div>
 
-            {/* Category legend */}
-            <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500 mb-6 bg-white/50 rounded-xl p-3">
+            <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500 mb-6 bg-white rounded-xl p-3 border border-gray-200">
               <span title="How deeply rooted in real Bulgarian culinary tradition">🏺 Authenticity</span>
               <span title="The show, theater, the story you'll tell people about">🎭 Experience</span>
               <span title="Actual cooking excellence">🍽️ Food Quality</span>
@@ -102,19 +95,19 @@ export function AppShell({ restaurants }: { restaurants: Restaurant[] }) {
       </main>
 
       {/* Footer */}
-      <footer className="text-center py-8 text-gray-500 text-xs">
+      <footer className="text-center py-8 text-gray-400 text-xs">
         <p>
           Made with ✨ by{' '}
           <a
             href="https://x.com/ClaudiaVeyral"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-amber-400 hover:text-amber-300 italic font-light transition-colors"
+            className="text-amber-600 hover:text-amber-500 italic font-light transition-colors"
           >
             Claudia
           </a>
         </p>
-              <p className="text-gray-600 mt-1">Last updated: March 10, 2026 (v8 - flights fixed)</p>
+        <p className="text-gray-400 mt-1">Last updated: March 11, 2026</p>
       </footer>
     </div>
   );

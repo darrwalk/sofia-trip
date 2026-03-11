@@ -12,7 +12,6 @@ export function EventsTab() {
 
   const filtered = filter === 'all' ? events : events.filter((e) => e.category === filter);
 
-  // Group by category for display
   const grouped = categories
     .map(([cat, meta]) => ({
       category: cat,
@@ -29,8 +28,8 @@ export function EventsTab() {
           onClick={() => setFilter('all')}
           className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
             filter === 'all'
-              ? 'bg-amber-500 text-slate-900'
-              : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+              ? 'bg-amber-500 text-white'
+              : 'bg-white text-gray-600 border border-gray-200 hover:border-gray-300'
           }`}
         >
           All ({events.length})
@@ -43,8 +42,8 @@ export function EventsTab() {
               onClick={() => setFilter(cat)}
               className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
                 filter === cat
-                  ? 'bg-amber-500 text-slate-900'
-                  : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                  ? 'bg-amber-500 text-white'
+                  : 'bg-white text-gray-600 border border-gray-200 hover:border-gray-300'
               }`}
             >
               {meta.emoji} {meta.label} ({count})
@@ -57,7 +56,7 @@ export function EventsTab() {
       <div className="space-y-8">
         {grouped.map((group) => (
           <div key={group.category}>
-            <h3 className="text-lg font-semibold text-amber-400 mb-3 flex items-center gap-2">
+            <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center gap-2">
               <span>{group.emoji}</span>
               <span>{group.label}</span>
             </h3>
@@ -65,18 +64,18 @@ export function EventsTab() {
               {group.items.map((item) => (
                 <div
                   key={item.name}
-                  className="bg-slate-800/60 border border-slate-700 rounded-xl p-4 hover:border-slate-600 transition-colors"
+                  className="bg-white border border-gray-200 rounded-xl p-4 hover:border-gray-300 hover:shadow-sm transition-all"
                 >
-                  <h4 className="font-semibold text-slate-100">
+                  <h4 className="font-semibold text-gray-900">
                     {item.url ? (
                       <a
                         href={item.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="hover:text-amber-400 transition-colors inline-flex items-center gap-1.5"
+                        className="hover:text-amber-600 transition-colors inline-flex items-center gap-1.5"
                       >
                         {item.name}
-                        <svg className="w-3.5 h-3.5 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <svg className="w-3.5 h-3.5 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                         </svg>
                       </a>
@@ -84,14 +83,14 @@ export function EventsTab() {
                       item.name
                     )}
                   </h4>
-                  <p className="text-sm text-slate-400 mt-1">{item.description}</p>
+                  <p className="text-sm text-gray-600 mt-1">{item.description}</p>
                   {item.note && (
-                    <p className="text-xs text-amber-300 mt-2 font-medium">
+                    <p className="text-xs text-amber-700 mt-2 font-medium">
                       ⚠️ {item.note}
                     </p>
                   )}
                   {item.date && (
-                    <p className="text-xs text-amber-400/80 mt-2">
+                    <p className="text-xs text-gray-500 mt-2">
                       📅 {new Date(item.date + 'T00:00:00').toLocaleDateString('en-GB', {
                         weekday: 'short',
                         day: 'numeric',
@@ -100,19 +99,16 @@ export function EventsTab() {
                     </p>
                   )}
                   {item.location && (
-                    <p className="text-xs text-slate-500 mt-1">📍 {item.location}</p>
+                    <p className="text-xs text-gray-400 mt-1">📍 {item.location}</p>
                   )}
                   {item.mapUrl && (
                     <a
                       href={item.mapUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-xs text-blue-400 hover:text-blue-300 mt-2"
+                      className="inline-flex items-center gap-1 text-xs text-blue-600 hover:text-blue-500 mt-2"
                     >
                       🗺️ Open in Maps
-                      <svg className="w-3 h-3 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                      </svg>
                     </a>
                   )}
                 </div>

@@ -4,11 +4,7 @@ import { useState, useEffect } from 'react';
 import { castVote } from '../lib/actions';
 import { VoterBubbles } from './VoterBubbles';
 
-type Vote = {
-  voter_name: string;
-  vote_type: 'up' | 'down';
-};
-
+type Vote = { voter_name: string; vote_type: 'up' | 'down' };
 type VoteButtonsProps = {
   restaurantId: number;
   initialVotes: Vote[];
@@ -45,17 +41,14 @@ export function VoteButtons({ restaurantId, initialVotes, upCount, downCount }: 
     setIsLoading(true);
     try {
       await castVote(restaurantId, name, type);
-      // Update local state optimistically
       setLocalVotes(prev => {
         const existing = prev.find(v => v.voter_name === name);
         if (existing) {
           if (existing.vote_type === type) {
-            // Toggle off
             if (type === 'up') setLocalUpCount(c => c - 1);
             else setLocalDownCount(c => c - 1);
             return prev.filter(v => v.voter_name !== name);
           } else {
-            // Switch
             if (type === 'up') { setLocalUpCount(c => c + 1); setLocalDownCount(c => c - 1); }
             else { setLocalDownCount(c => c + 1); setLocalUpCount(c => c - 1); }
             return prev.map(v => v.voter_name === name ? { ...v, vote_type: type } : v);
@@ -85,25 +78,25 @@ export function VoteButtons({ restaurantId, initialVotes, upCount, downCount }: 
   return (
     <div className="space-y-2">
       {showNameInput && (
-        <form onSubmit={handleNameSubmit} className="flex gap-2 items-center bg-slate-800 rounded-lg p-3">
+        <form onSubmit={handleNameSubmit} className="flex gap-2 items-center bg-gray-50 border border-gray-200 rounded-lg p-3">
           <input
             autoFocus
             type="text"
             placeholder="Your name..."
             value={voterName}
             onChange={e => setVoterName(e.target.value)}
-            className="flex-1 bg-slate-700 text-white text-sm rounded px-3 py-1.5 outline-none focus:ring-1 focus:ring-amber-400"
+            className="flex-1 bg-white text-gray-900 text-sm rounded px-3 py-1.5 border border-gray-300 outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400"
           />
           <button
             type="submit"
-            className="bg-amber-500 hover:bg-amber-400 text-slate-900 text-sm font-semibold px-3 py-1.5 rounded"
+            className="bg-amber-500 hover:bg-amber-400 text-white text-sm font-semibold px-3 py-1.5 rounded"
           >
             Vote
           </button>
           <button
             type="button"
             onClick={() => { setShowNameInput(false); setPendingVote(null); }}
-            className="text-slate-400 hover:text-white text-sm px-2"
+            className="text-gray-400 hover:text-gray-600 text-sm px-2"
           >
             ✕
           </button>
@@ -116,8 +109,8 @@ export function VoteButtons({ restaurantId, initialVotes, upCount, downCount }: 
             disabled={isLoading}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
               myVote?.vote_type === 'up'
-                ? 'bg-green-600 text-white'
-                : 'bg-slate-700 hover:bg-slate-600 text-slate-200'
+                ? 'bg-green-500 text-white'
+                : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-200'
             } disabled:opacity-50`}
           >
             👍 {localUpCount}
@@ -130,8 +123,8 @@ export function VoteButtons({ restaurantId, initialVotes, upCount, downCount }: 
             disabled={isLoading}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
               myVote?.vote_type === 'down'
-                ? 'bg-red-700 text-white'
-                : 'bg-slate-700 hover:bg-slate-600 text-slate-200'
+                ? 'bg-red-500 text-white'
+                : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-200'
             } disabled:opacity-50`}
           >
             👎 {localDownCount}
@@ -141,7 +134,7 @@ export function VoteButtons({ restaurantId, initialVotes, upCount, downCount }: 
         {voterName && (
           <button
             onClick={() => { setVoterName(''); localStorage.removeItem('sofia-trip-voter-name'); }}
-            className="text-xs text-slate-500 hover:text-slate-300 mt-2 ml-auto"
+            className="text-xs text-gray-400 hover:text-gray-600 mt-2 ml-auto"
             title="Change voter name"
           >
             as {voterName} ✎
