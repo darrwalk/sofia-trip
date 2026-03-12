@@ -101,6 +101,15 @@ export const flights: Flight[] = [
     arrival: { airport: 'Nice', code: 'NCE', time: '14:25' },
   },
   
-  // Wassily - TBD
+  // Wassily - Mon May 19
+  {
+    airline: 'TBD',
+    direction: 'return',
+    date: '2026-05-19',
+    passenger: 'Wassily',
+    departure: { airport: 'Sofia', code: 'SOF', time: '10:20' },
+    arrival: { airport: 'Berlin', code: 'BER', time: '12:00' },
+  },
+
   // Stefan - TBD
 ];
