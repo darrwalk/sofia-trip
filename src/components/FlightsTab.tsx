@@ -9,7 +9,7 @@ export function FlightsTab() {
   
   const departures = flights
     .filter(f => f.direction === 'return')
-    .sort((a, b) => a.departure.time.localeCompare(b.departure.time));
+    .sort((a, b) => a.date.localeCompare(b.date) || a.departure.time.localeCompare(b.departure.time));
 
   return (
     <div className="space-y-8">
