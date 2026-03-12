@@ -713,3 +713,52 @@ export function upsertVote(restaurantId: number, voterName: string, voteType: 'u
     ).run(restaurantId, voterName, voteType);
   }
 }
+
+// ── Chat Messages ──
+
+export type ChatMessage = {
+  id: number;
+  name: string;
+  message: string;
+  is_bot: number;
+  created_at: string;
+};
+
+function initChatSchema(db: Database.Database) {
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS chat_messages (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      message TEXT NOT NULL,
+      is_bot INTEGER DEFAULT 0,
+      created_at TEXT DEFAULT (datetime('now'))
+    );
+  `);
+}
+
+export function ensureChatSchema() {
+  const db = getDb();
+  initChatSchema(db);
+}
+
+export function getChatMessages(since?: string): ChatMessage[] {
+  const db = getDb();
+  initChatSchema(db);
+  if (since) {
+    return db.prepare(
+      'SELECT * FROM chat_messages WHERE created_at > ? ORDER BY created_at ASC'
+    ).all(since) as ChatMessage[];
+  }
+  return db.prepare(
+    'SELECT * FROM chat_messages ORDER BY created_at ASC'
+  ).all() as ChatMessage[];
+}
+
+export function createChatMessage(name: string, message: string, isBot: boolean = false): ChatMessage {
+  const db = getDb();
+  initChatSchema(db);
+  const result = db.prepare(
+    'INSERT INTO chat_messages (name, message, is_bot) VALUES (?, ?, ?)'
+  ).run(name, message, isBot ? 1 : 0);
+  return db.prepare('SELECT * FROM chat_messages WHERE id = ?').get(result.lastInsertRowid) as ChatMessage;
+}
