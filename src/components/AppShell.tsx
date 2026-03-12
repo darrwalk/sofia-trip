@@ -1,13 +1,14 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Image from 'next/image';
-import { TabSwitcher, type TabId } from './TabSwitcher';
-import { SortFilter } from './SortFilter';
-import { FlightsTab } from './FlightsTab';
-import { EventsTab } from './EventsTab';
+import { useState } from "react";
+import Image from "next/image";
+import { TabSwitcher, type TabId } from "./TabSwitcher";
+import { SortFilter } from "./SortFilter";
+import { FlightsTab } from "./FlightsTab";
+import { EventsTab } from "./EventsTab";
+import { ChatTab } from "./ChatTab";
 
-type Vote = { voter_name: string; vote_type: 'up' | 'down' };
+type Vote = { voter_name: string; vote_type: "up" | "down" };
 type Restaurant = {
   id: number; rank: number; name: string; address: string;
   price_range: string; description: string; website: string | null;
@@ -20,7 +21,7 @@ type Restaurant = {
 };
 
 export function AppShell({ restaurants }: { restaurants: Restaurant[] }) {
-  const [activeTab, setActiveTab] = useState<TabId>('restaurants');
+  const [activeTab, setActiveTab] = useState<TabId>("restaurants");
 
   const totalVoters = new Set(restaurants.flatMap(r => r.votes.map(v => v.voter_name))).size;
 
@@ -67,19 +68,19 @@ export function AppShell({ restaurants }: { restaurants: Restaurant[] }) {
 
       {/* Main Content */}
       <main className="max-w-4xl mx-auto px-4 py-6">
-        {activeTab === 'restaurants' && (
+        {activeTab === "restaurants" && (
           <>
             <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-6">
               <p className="text-sm text-gray-700">
                 <span className="text-amber-700 font-semibold">Good Old Boys Trips · Sofia 🇧🇬 · May 15–18, 2026</span>
-                {' '}— Vote on where you want to eat! The best picks rise to the top.
+                {" "}— Vote on where you want to eat! The best picks rise to the top.
                 Your name is saved locally, so you only need to enter it once.
               </p>
             </div>
 
             <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500 mb-6 bg-white rounded-xl p-3 border border-gray-200">
               <span title="How deeply rooted in real Bulgarian culinary tradition">🏺 Authenticity</span>
-              <span title="The show, theater, the story you'll tell people about">🎭 Experience</span>
+              <span title="The show, theater, the story you&apos;ll tell people about">🎭 Experience</span>
               <span title="Actual cooking excellence">🍽️ Food Quality</span>
               <span title="Hard to get into, intimate, not tourist-trap">🤫 Exclusivity</span>
               <span title="Bang for the buck">💰 Value</span>
@@ -89,15 +90,17 @@ export function AppShell({ restaurants }: { restaurants: Restaurant[] }) {
           </>
         )}
 
-        {activeTab === 'flights' && <FlightsTab />}
+        {activeTab === "flights" && <FlightsTab />}
 
-        {activeTab === 'things-to-do' && <EventsTab />}
+        {activeTab === "things-to-do" && <EventsTab />}
+
+        {activeTab === "chat" && <ChatTab />}
       </main>
 
       {/* Footer */}
       <footer className="text-center py-8 text-gray-400 text-xs">
         <p>
-          Made with ✨ by{' '}
+          Made with ✨ by{" "}
           <a
             href="https://x.com/ClaudiaVeyral"
             target="_blank"
@@ -107,7 +110,7 @@ export function AppShell({ restaurants }: { restaurants: Restaurant[] }) {
             Claudia
           </a>
         </p>
-        <p className="text-gray-400 mt-1">Last updated: March 11, 2026</p>
+        <p className="text-gray-400 mt-1">Last updated: March 12, 2026</p>
       </footer>
     </div>
   );
