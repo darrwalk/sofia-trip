@@ -1,16 +1,26 @@
 name: Deploy to Coolify
 on:
   push:
-    branches: [main]
+    branches: [main, dev]
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger Coolify deploy
+      - name: Deploy main to production
+        if: github.ref == 'refs/heads/main'
         env:
           COOLIFY_TOKEN: ${{ secrets.COOLIFY_TOKEN }}
         run: |
           curl -sf -X POST \
             "https://coolify.forge.dexmind.ai/api/v1/deploy?uuid=xwg0s88k44oww4wgcg84okwg" \
+            -H "Authorization: Bearer $COOLIFY_TOKEN" \
+            -H "Accept: application/json"
+      - name: Deploy dev to staging
+        if: github.ref == 'refs/heads/dev'
+        env:
+          COOLIFY_TOKEN: ${{ secrets.COOLIFY_TOKEN }}
+        run: |
+          curl -sf -X POST \
+            "https://coolify.forge.dexmind.ai/api/v1/deploy?uuid=d8ckk8oss0sgsggockowskkc" \
             -H "Authorization: Bearer $COOLIFY_TOKEN" \
             -H "Accept: application/json"
