@@ -1,6 +1,6 @@
 FROM node:22-alpine AS builder
 
-RUN apk add --no-cache libc6-compat python3 make g++
+RUN apk add --no-cache libc6-compat python3 make g++ git
 
 WORKDIR /app
 COPY package.json package-lock.json* ./
