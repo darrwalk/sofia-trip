@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { ScoreBar } from './ScoreBar';
 import { VoteButtons } from './VoteButtons';
+import { AddToScheduleButton } from './AddToScheduleButton';
 
 type Vote = { voter_name: string; vote_type: 'up' | 'down' };
 type Restaurant = {
@@ -111,6 +112,11 @@ export function RestaurantCard({ restaurant }: { restaurant: Restaurant }) {
                 📍 Maps
               </a>
             )}
+            <AddToScheduleButton
+              title={restaurant.name}
+              linkedRestaurantId={restaurant.id}
+              defaultCategory="restaurant"
+            />
           </div>
         </div>
       </div>

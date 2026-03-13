@@ -6,6 +6,7 @@ import { TabSwitcher, type TabId } from "./TabSwitcher";
 import { SortFilter } from "./SortFilter";
 import { FlightsTab } from "./FlightsTab";
 import { EventsTab } from "./EventsTab";
+import { ScheduleTab } from "./ScheduleTab";
 
 type Vote = { voter_name: string; vote_type: "up" | "down" };
 type Restaurant = {
@@ -92,6 +93,8 @@ export function AppShell({ restaurants }: { restaurants: Restaurant[] }) {
         {activeTab === "flights" && <FlightsTab />}
 
         {activeTab === "things-to-do" && <EventsTab />}
+
+        {activeTab === "schedule" && <ScheduleTab />}
       </main>
 
       {/* Footer */}
@@ -107,7 +110,7 @@ export function AppShell({ restaurants }: { restaurants: Restaurant[] }) {
             Claudia
           </a>
         </p>
-        <p className="text-gray-400 mt-1">Last updated: March 12, 2026</p>
+        <p className="text-gray-400 mt-1">Last updated: March 13, 2026</p>
       </footer>
     </div>
   );
