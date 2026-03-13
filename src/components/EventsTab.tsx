@@ -1,14 +1,38 @@
 'use client';
 
-import { events, categoryLabels, type EventItem } from '../data/events';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { categoryLabels, type EventCategory } from '../data/events';
 
-type CategoryFilter = EventItem['category'] | 'all';
+type EventItem = {
+  id: number;
+  name: string;
+  category: string;
+  description: string;
+  date: string | null;
+  location: string | null;
+  url: string | null;
+  map_url: string | null;
+  note: string | null;
+};
+
+type CategoryFilter = EventCategory | 'all';
 
 export function EventsTab() {
   const [filter, setFilter] = useState<CategoryFilter>('all');
+  const [events, setEvents] = useState<EventItem[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const categories = Object.entries(categoryLabels) as [EventItem['category'], { emoji: string; label: string }][];
+  useEffect(() => {
+    fetch('/api/events')
+      .then(res => res.json())
+      .then(data => {
+        setEvents(data);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
+  const categories = Object.entries(categoryLabels) as [EventCategory, { emoji: string; label: string }][];
 
   const filtered = filter === 'all' ? events : events.filter((e) => e.category === filter);
 
@@ -19,6 +43,10 @@ export function EventsTab() {
       items: filtered.filter((e) => e.category === cat),
     }))
     .filter((g) => g.items.length > 0);
+
+  if (loading) {
+    return <div className="text-center py-12 text-gray-400">Loading events...</div>;
+  }
 
   return (
     <div>
@@ -63,7 +91,7 @@ export function EventsTab() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {group.items.map((item) => (
                 <div
-                  key={item.name}
+                  key={item.id}
                   className="bg-white border border-gray-200 rounded-xl p-4 hover:border-gray-300 hover:shadow-sm transition-all"
                 >
                   <h4 className="font-semibold text-gray-900">
@@ -101,9 +129,9 @@ export function EventsTab() {
                   {item.location && (
                     <p className="text-xs text-gray-400 mt-1">📍 {item.location}</p>
                   )}
-                  {item.mapUrl && (
+                  {item.map_url && (
                     <a
-                      href={item.mapUrl}
+                      href={item.map_url}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1 text-xs text-blue-600 hover:text-blue-500 mt-2"
