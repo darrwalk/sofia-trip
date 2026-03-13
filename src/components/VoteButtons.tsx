@@ -85,18 +85,18 @@ export function VoteButtons({ restaurantId, initialVotes, upCount, downCount }: 
             placeholder="Your name..."
             value={voterName}
             onChange={e => setVoterName(e.target.value)}
-            className="flex-1 bg-white text-gray-900 text-sm rounded px-3 py-1.5 border border-gray-300 outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400"
+            className="flex-1 bg-white text-gray-900 text-sm rounded px-3 py-2 border border-gray-300 outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400 min-h-[44px]"
           />
           <button
             type="submit"
-            className="bg-amber-500 hover:bg-amber-400 text-white text-sm font-semibold px-3 py-1.5 rounded"
+            className="bg-amber-500 hover:bg-amber-400 text-white text-sm font-semibold px-4 py-2 rounded min-h-[44px]"
           >
             Vote
           </button>
           <button
             type="button"
             onClick={() => { setShowNameInput(false); setPendingVote(null); }}
-            className="text-gray-400 hover:text-gray-600 text-sm px-2"
+            className="text-gray-400 hover:text-gray-600 text-sm px-3 min-h-[44px]"
           >
             ✕
           </button>
@@ -107,7 +107,7 @@ export function VoteButtons({ restaurantId, initialVotes, upCount, downCount }: 
           <button
             onClick={() => handleVote('up')}
             disabled={isLoading}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+            className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-all min-h-[44px] min-w-[44px] ${
               myVote?.vote_type === 'up'
                 ? 'bg-green-500 text-white'
                 : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-200'
@@ -121,7 +121,7 @@ export function VoteButtons({ restaurantId, initialVotes, upCount, downCount }: 
           <button
             onClick={() => handleVote('down')}
             disabled={isLoading}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+            className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-all min-h-[44px] min-w-[44px] ${
               myVote?.vote_type === 'down'
                 ? 'bg-red-500 text-white'
                 : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-200'
@@ -134,7 +134,7 @@ export function VoteButtons({ restaurantId, initialVotes, upCount, downCount }: 
         {voterName && (
           <button
             onClick={() => { setVoterName(''); localStorage.removeItem('sofia-trip-voter-name'); }}
-            className="text-xs text-gray-400 hover:text-gray-600 mt-2 ml-auto"
+            className="text-xs text-gray-400 hover:text-gray-600 mt-2 ml-auto min-h-[44px] flex items-center"
             title="Change voter name"
           >
             as {voterName} ✎
