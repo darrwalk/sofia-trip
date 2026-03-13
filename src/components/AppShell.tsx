@@ -110,7 +110,7 @@ export function AppShell({ restaurants }: { restaurants: Restaurant[] }) {
             Claudia
           </a>
         </p>
-        <p className="text-gray-400 mt-1">Last updated: March 13, 2026</p>
+        <p className="text-gray-400 mt-1">Last updated: March 13, 2026 · <span className="text-gray-300">{process.env.NEXT_PUBLIC_BUILD_VERSION}</span></p>
       </footer>
     </div>
   );
