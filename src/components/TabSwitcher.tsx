@@ -1,6 +1,6 @@
 "use client";
 
-export type TabId = "restaurants" | "flights" | "things-to-do" | "chat";
+export type TabId = "restaurants" | "flights" | "things-to-do";
 
 type Tab = { id: TabId; emoji: string; label: string };
 
@@ -8,7 +8,6 @@ const tabs: Tab[] = [
   { id: "restaurants", emoji: "🍽️", label: "Restaurants" },
   { id: "flights", emoji: "✈️", label: "Flights" },
   { id: "things-to-do", emoji: "📅", label: "Things To Do" },
-  { id: "chat", emoji: "💬", label: "Chat" },
 ];
 
 export function TabSwitcher({
