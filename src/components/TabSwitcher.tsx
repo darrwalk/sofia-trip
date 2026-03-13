@@ -6,7 +6,7 @@ type Tab = { id: TabId; emoji: string; label: string; shortLabel: string };
 
 const tabs: Tab[] = [
   { id: "restaurants", emoji: "🍽️", label: "Restaurants", shortLabel: "Food" },
-  { id: "things-to-do", emoji: "📅", label: "Out & About", shortLabel: "Out" },
+  { id: "things-to-do", emoji: "📅", label: "Out & About", shortLabel: "Out & About" },
   { id: "schedule", emoji: "📆", label: "Our Schedule", shortLabel: "Schedule" },
   { id: "flights", emoji: "✈️", label: "Flights", shortLabel: "Flights" },
 ];
