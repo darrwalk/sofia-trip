@@ -17,11 +17,11 @@ type ScheduleItem = {
 };
 
 const DAYS = [
-  { date: "2026-05-15", label: "Thu, May 15", short: "Thu" },
-  { date: "2026-05-16", label: "Fri, May 16", short: "Fri" },
-  { date: "2026-05-17", label: "Sat, May 17", short: "Sat" },
-  { date: "2026-05-18", label: "Sun, May 18", short: "Sun" },
-  { date: "2026-05-19", label: "Mon, May 19", short: "Mon" },
+  { date: "2026-05-15", label: "Fri, May 15", short: "Fri" },
+  { date: "2026-05-16", label: "Sat, May 16", short: "Sat" },
+  { date: "2026-05-17", label: "Sun, May 17", short: "Sun" },
+  { date: "2026-05-18", label: "Mon, May 18", short: "Mon" },
+  { date: "2026-05-19", label: "Tue, May 19", short: "Tue" },
 ];
 
 const CATEGORIES = [
@@ -298,7 +298,7 @@ export function ScheduleTab() {
                         className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full bg-white/80 text-gray-400 hover:text-red-500 hover:bg-red-50 text-xs opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center"
                         title="Remove"
                       >
-                        \u00d7
+                        ×
                       </button>
 
                       {/* Time */}
@@ -376,7 +376,7 @@ export function ScheduleTab() {
                             onClick={() => handleStartEdit(item)}
                             className="text-xs text-gray-400 hover:text-amber-600 mt-1 opacity-0 group-hover:opacity-100 transition-all"
                           >
-                            \u270f\ufe0f edit
+                            ✏️ edit
                           </button>
                         </>
                       )}
